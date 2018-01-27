@@ -6,13 +6,15 @@ import java.util.ResourceBundle;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.layout.BorderPane;
 
 public class SingletonController implements Initializable {
 	
-	private static SingletonController view;
+	private static SingletonController controller;
 	private BorderPane rootNode;
 	@FXML private Button bList;
 	@FXML private Button bQuit;
@@ -23,10 +25,10 @@ public class SingletonController implements Initializable {
 	}
 
 	public static SingletonController getInstance() {
-		if (view == null) {
-			view = new SingletonController();
+		if (controller == null) {
+			controller = new SingletonController();
 		}
-		return view;
+		return controller;
 	}
 	
 	public void setRootNode(BorderPane rootNode) {
@@ -35,11 +37,28 @@ public class SingletonController implements Initializable {
 
 	@FXML void handleMenuEvent(ActionEvent event) throws IOException {
 		if(event.getSource() == bList) {
-			System.out.println("Author List Clicked");
-		}
-		else if(event.getSource() == bQuit) {
+			authorListView();
+		} else if(event.getSource() == bBack){
+			backToMainMenu();
+		} else if(event.getSource() == bQuit) {
 			System.exit(0);
 		}
+	}
+	
+	@FXML public void backToMainMenu() throws IOException {
+		URL fxmlFile = this.getClass().getResource("Menu.fxml");
+		FXMLLoader loader = new FXMLLoader(fxmlFile);
+		loader.setController(SingletonController.getInstance());
+		Parent view = loader.load();
+		rootNode.setCenter(view);
+	}
+	
+	@FXML public void authorListView() throws IOException {
+		URL fxmlFile = this.getClass().getResource("AuthorList.fxml");
+		FXMLLoader loader = new FXMLLoader(fxmlFile);
+		loader.setController(SingletonController.getInstance());
+		Parent view = loader.load();
+		rootNode.setCenter(view);
 	}
 
 	@Override
