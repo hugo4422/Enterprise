@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -38,7 +39,7 @@ public class SingletonController implements Initializable {
 			System.out.println("Author List Clicked");
 		}
 		else if(event.getSource() == bQuit) {
-			System.exit(0);
+			Platform.exit();
 		}
 	}
 
