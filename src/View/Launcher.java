@@ -13,6 +13,7 @@ public class Launcher extends Application {
 	
 	public static BorderPane rootNode;
 	public static SingletonController controller;
+	//public static AuthorListController aController
 	
 	public static void main(String[] args) {
 		launch(args);
