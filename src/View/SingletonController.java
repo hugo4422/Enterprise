@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ResourceBundle;
 
 import javafx.application.Platform;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -22,11 +24,9 @@ public class SingletonController implements Initializable {
 	private BorderPane rootNode;
 	//@FXML private MenuButton dropList;
 	//@FXML private Button bList;
-	@FXML private ListView<String> list;
+	@FXML private ListView<String> itemList;
 	@FXML private MenuItem aQuit;
 	@FXML private MenuItem authorList;
-	
-	public String[] dummyAuthor = {"Casey", "Chavez", "03/21/1996", "Female", "www.someWebSite.com"};
 
 	protected SingletonController() {
 		// Exists only to defeat instantiation.
@@ -53,14 +53,6 @@ public class SingletonController implements Initializable {
 		} 
 	}
 	
-	@FXML public void backToMainMenu() throws IOException {
-		URL fxmlFile = this.getClass().getResource("Menu.fxml");
-		FXMLLoader loader = new FXMLLoader(fxmlFile);
-		loader.setController(SingletonController.getInstance());
-		Parent view = loader.load();
-		rootNode.setCenter(view);
-	}
-	
 	@FXML public void authorListView() throws IOException {
 		URL fxmlFile = this.getClass().getResource("AuthorList.fxml");
 		FXMLLoader loader = new FXMLLoader(fxmlFile);
@@ -72,6 +64,5 @@ public class SingletonController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		// TODO Auto-generated method stub
-		
 	}
 }
