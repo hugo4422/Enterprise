@@ -4,18 +4,24 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.layout.BorderPane;
 
 public class AuthorListController {
 	
 	@FXML private ListView<String> itemList;
+	private BorderPane rootNode;
+	@FXML private MenuItem aQuit;
+	@FXML private MenuItem authorList;
 	
 	public AuthorListController() {
 		// TODO Auto-generated constructor stub
@@ -35,12 +41,25 @@ public class AuthorListController {
 			Parent view = loader.load();
 			Launcher.rootNode.setCenter(view);
 		}
+		
 	}
 
 	public void initialize() {
 		// TODO Auto-generated method stub
-		ObservableList<String> items = FXCollections.observableArrayList("Dummy One", "Dummy Two", "Dummy Three");
+		ObservableList<String> items = FXCollections.observableArrayList("Casey Bowden", "Hugo Chavez", "Bowden Casey");
 		itemList.setItems(items);
 	}
-
+	
+	public void setRootNode(BorderPane rootNode) {
+		this.rootNode = rootNode;
+	}
+	
+	@FXML void handleMenuEvent(ActionEvent event) throws IOException {
+		
+		 if(event.getSource() == aQuit) { 
+			Platform.exit();
+			}
+	}
+	
+	
 }

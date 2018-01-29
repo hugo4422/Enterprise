@@ -23,7 +23,7 @@ public class SingletonController implements Initializable {
 	private static SingletonController controller;
 	private BorderPane rootNode;
 	//@FXML private MenuButton dropList;
-	//@FXML private Button bList;
+	@FXML private Button bSave;
 	@FXML private MenuItem aQuit;
 	@FXML private MenuItem authorList;
 
@@ -49,7 +49,10 @@ public class SingletonController implements Initializable {
 			}
 		 else if(event.getSource() == authorList){
 			authorListView();
-		} 
+		}
+		 else if(event.getSource() == bSave){
+			 authorListView();
+		 }
 	}
 	
 	@FXML public void authorListView() throws IOException {
