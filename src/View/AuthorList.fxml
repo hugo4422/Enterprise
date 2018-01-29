@@ -13,13 +13,7 @@
   <content>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0">
          <children>
-            <MenuButton layoutX="7.0" layoutY="1.0" mnemonicParsing="false" text="MenuButton">
-              <items>
-                <MenuItem id="authorList" fx:id="authorList" mnemonicParsing="false" onAction="#handleMenuEvent" text="Author List" />
-                <MenuItem id="aQuit" fx:id="aQuit" mnemonicParsing="false" onAction="#handleMenuEvent" text="Quit" />
-              </items>
-            </MenuButton>
-            <ListView fx:id="itemList" layoutX="14.0" layoutY="43.0" onMouseClicked="#handleMenuEvent" prefHeight="338.0" prefWidth="559.0" />
+            <ListView fx:id="itemList" layoutX="14.0" layoutY="43.0" onMouseClicked="#handleListAction" prefHeight="338.0" prefWidth="559.0" />
          </children></AnchorPane>
   </content>
 </ScrollPane>

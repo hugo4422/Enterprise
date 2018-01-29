@@ -1,11 +1,14 @@
 package View;
 
 import java.io.IOException;
+import java.net.URL;
+import java.util.ResourceBundle;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
@@ -20,7 +23,7 @@ public class AuthorListController {
 	
 	String temp = "";
 	
-	@FXML private void handleListAction() throws IOException {
+	@FXML void handleListAction() throws IOException {
 		String item = itemList.getSelectionModel().getSelectedItem();
 		if(item == null) {
 			return;
@@ -33,8 +36,9 @@ public class AuthorListController {
 			Launcher.rootNode.setCenter(view);
 		}
 	}
-	
+
 	public void initialize() {
+		// TODO Auto-generated method stub
 		ObservableList<String> items = FXCollections.observableArrayList("Dummy One", "Dummy Two", "Dummy Three");
 		itemList.setItems(items);
 	}

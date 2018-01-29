@@ -24,7 +24,6 @@ public class SingletonController implements Initializable {
 	private BorderPane rootNode;
 	//@FXML private MenuButton dropList;
 	//@FXML private Button bList;
-	@FXML private ListView<String> itemList;
 	@FXML private MenuItem aQuit;
 	@FXML private MenuItem authorList;
 
@@ -56,7 +55,7 @@ public class SingletonController implements Initializable {
 	@FXML public void authorListView() throws IOException {
 		URL fxmlFile = this.getClass().getResource("AuthorList.fxml");
 		FXMLLoader loader = new FXMLLoader(fxmlFile);
-		loader.setController(SingletonController.getInstance());
+		loader.setController(new AuthorListController());
 		Parent view = loader.load();
 		rootNode.setCenter(view);
 	}
