@@ -1,8 +1,11 @@
 package View;
 
-import java.io.IOException;
+import java.io.IOException; 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
@@ -26,9 +29,11 @@ public class SingletonController implements Initializable {
 	@FXML private Button bSave;
 	@FXML private MenuItem aQuit;
 	@FXML private MenuItem authorList;
-
+	final static Logger logger = LogManager.getLogger(SingletonController.class);
+	
 	protected SingletonController() {
 		// Exists only to defeat instantiation.
+		
 	}
 
 	public static SingletonController getInstance() {
@@ -44,13 +49,16 @@ public class SingletonController implements Initializable {
 
 	@FXML void handleMenuEvent(ActionEvent event) throws IOException {
 		
-		 if(event.getSource() == aQuit) { 
+		 if(event.getSource() == aQuit) {
+			logger.error("Quiting");
 			Platform.exit();
 			}
 		 else if(event.getSource() == authorList){
+			 logger.error("Author List Pressed");
 			authorListView();
 		}
 		 else if(event.getSource() == bSave){
+			 logger.error("Save button pressed");
 			 authorListView();
 		 }
 	}

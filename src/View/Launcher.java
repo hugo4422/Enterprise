@@ -1,6 +1,6 @@
 package View;
 
-import java.net.URL;
+import java.net.URL; 
 
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -8,6 +8,9 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.layout.BorderPane;
 import javafx.stage.Stage;
+
+
+// CS 4743 Assignment 1 by Casey Bowden and Hugo Chavez
 
 public class Launcher extends Application {
 	

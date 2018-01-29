@@ -4,6 +4,9 @@ import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
+
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -22,6 +25,7 @@ public class AuthorListController {
 	private BorderPane rootNode;
 	@FXML private MenuItem aQuit;
 	@FXML private MenuItem authorList;
+	private static Logger logger = LogManager.getLogger(AuthorListController.class);
 	
 	public AuthorListController() {
 		// TODO Auto-generated constructor stub
@@ -36,6 +40,7 @@ public class AuthorListController {
 		} else if(item != temp) {
 			temp = item;
 		} else if(item == temp) {
+			logger.error("Author Double Clicked!");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("AuthorDetailView.fxml"));
 			loader.setController(SingletonController.getInstance());
 			Parent view = loader.load();
