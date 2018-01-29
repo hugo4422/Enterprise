@@ -9,11 +9,11 @@
 
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <TextField id="tFirstName" fx:id="tFirstName" layoutX="45.0" layoutY="103.0" />
-      <TextField id="tLastName" fx:id="tLastName" layoutX="219.0" layoutY="103.0" />
-      <TextField id="tDoB" fx:id="tDoB" layoutX="45.0" layoutY="178.0" />
-      <TextField id="tEmail" fx:id="tEmail" layoutX="219.0" layoutY="178.0" />
-      <TextField fx:id="tGender" layoutX="134.0" layoutY="253.0" />
+      <TextField id="tFirstName" fx:id="tFirstName" text="Casey" layoutX="45.0" layoutY="103.0" />
+      <TextField id="tLastName" fx:id="tLastName" text="Chavez" layoutX="219.0" layoutY="103.0" />
+      <TextField id="tDoB" fx:id="tDoB" text="03/21/1996" layoutX="45.0" layoutY="178.0" />
+      <TextField id="tEmail" fx:id="tEmail" text="mrHAHA@gStank.com" layoutX="219.0" layoutY="178.0" />
+      <TextField fx:id="tGender" text="Male" layoutX="134.0" layoutY="253.0" />
       <Button id="bSave" fx:id="bSave" layoutX="313.0" layoutY="318.0" mnemonicParsing="false" onAction="#handleMenuEvent" text="Save" />
       <Label layoutX="42.0" layoutY="86.0" prefHeight="17.0" prefWidth="57.0" text="First Name" />
       <Label layoutX="219.0" layoutY="86.0" prefHeight="17.0" prefWidth="57.0" text="Last Name" />
