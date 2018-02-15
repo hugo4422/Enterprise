@@ -42,7 +42,7 @@ public class AuthorListController {
 		} else if(item != temp) {
 			temp = item;
 		} else if(item == temp) {
-			logger.trace("Author Double Clicked!");
+			logger.warn("Author Double Clicked!");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("AuthorDetailView.fxml"));
 			loader.setController(SingletonController.getInstance());
 			Parent view = loader.load();
