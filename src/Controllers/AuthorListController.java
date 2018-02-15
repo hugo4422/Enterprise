@@ -1,8 +1,9 @@
-package View;
+package Controllers;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import Views.*;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -18,6 +19,7 @@ import javafx.scene.Parent;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.layout.BorderPane;
+import main.Launcher;
 
 public class AuthorListController {
 	
@@ -40,7 +42,7 @@ public class AuthorListController {
 		} else if(item != temp) {
 			temp = item;
 		} else if(item == temp) {
-			logger.error("Author Double Clicked!");
+			logger.trace("Author Double Clicked!");
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("AuthorDetailView.fxml"));
 			loader.setController(SingletonController.getInstance());
 			Parent view = loader.load();

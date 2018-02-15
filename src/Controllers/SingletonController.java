@@ -1,8 +1,9 @@
-package View;
+package Controllers;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
+import Views.*;
 
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
@@ -52,13 +53,13 @@ public class SingletonController implements Initializable {
 		 if(event.getSource() == aQuit) {
 			logger.error("Quiting");
 			Platform.exit();
-			}
+		}
 		 else if(event.getSource() == authorList){
-			 logger.error("Author List Pressed");
+			 logger.warn("Author List Pressed");
 			authorListView();
 		}
 		 else if(event.getSource() == bSave){
-			 logger.error("Save button pressed");
+			 logger.warn("Save button pressed");
 			 authorListView();
 		 }
 	}

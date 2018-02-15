@@ -1,7 +1,9 @@
-package View;
+package main;
 
-import java.net.URL; 
+import java.net.URL;
 
+import Controllers.*;
+import Views.*;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
