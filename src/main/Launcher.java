@@ -38,7 +38,7 @@ public class Launcher extends Application {
 		super.init();
 		
 		//create gateway and exit if problem
-		logger.error("Launcher init called");
+		logger.info("Launcher init called");
 		authorGateway = new AuthorTableGateway();
 	}
 	
@@ -47,7 +47,7 @@ public class Launcher extends Application {
 		super.stop();
 		
 		//close gateway
-		logger.error("Launcher stop called");
+		logger.info("Launcher stop called");
 		authorGateway.close();
 	}
 

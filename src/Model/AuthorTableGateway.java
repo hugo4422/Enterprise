@@ -83,7 +83,6 @@ public class AuthorTableGateway {
 		
 		try{
 			st = conn.prepareStatement("insert into Author (first_name, last_name, dob, gender, website) values (?, ?, ?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
-			logger.error(newAuthor.getDob());
 			st.setString(1, newAuthor.getFirstName());
 			st.setString(2, newAuthor.getLastName());
 			st.setString(3, newAuthor.getDob());
@@ -97,11 +96,6 @@ public class AuthorTableGateway {
 		}catch(SQLException e){
 			logger.error("The insert has failed");
 			e.printStackTrace();
-			System.out.println(newAuthor.getFirstName() + " <---");
-			System.out.println(newAuthor.getDob() + " <---");
-			System.out.println(newAuthor.getLastName() + " <---");
-			System.out.println(newAuthor.getGender() + " <---");
-			System.out.println(newAuthor.getWebsite() + " <---");
 		}finally{
 			if(rs != null){
 				rs.close();

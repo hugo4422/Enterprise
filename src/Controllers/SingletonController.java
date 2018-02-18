@@ -62,7 +62,7 @@ public class SingletonController /*implements Initializable*/ {
 			Platform.exit();
 		}
 		 else if(event.getSource() == authorList){
-			logger.warn("Author List Pressed");
+			logger.info("Author List Pressed");
 			List<Author> authors = Launcher.authorGateway.getAuthors();
 			URL fxmlFile = this.getClass().getResource("AuthorList.fxml");
 			FXMLLoader loader = new FXMLLoader(fxmlFile);
@@ -72,7 +72,7 @@ public class SingletonController /*implements Initializable*/ {
 		}
 		 
 		 else if(event.getSource() == addAuthor){
-			logger.error("Add author was called");
+			logger.info("Add author was called");
 			SingletonController.getInstance().setAuthor(new Author(0, "", "", "", "", ""));
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("AuthorDetailView.fxml"));
 			loader.setController(SingletonController.getInstance());
@@ -89,7 +89,7 @@ public class SingletonController /*implements Initializable*/ {
 			author.setDob(tDoB.getText());
 			author.setGender(tGender.getText());
 			author.setWebsite(tWebsite.getText());
-			logger.warn("Save button pressed");
+			logger.info("Save button pressed");
 			
 			 try {
 				author.Save(author);
@@ -126,17 +126,4 @@ public class SingletonController /*implements Initializable*/ {
 	public void setAuthor(Author author) {
 		this.author = author;
 	}
-
-	/*@Override
-	public void initialize(URL arg0, ResourceBundle arg1) {
-		// TODO Auto-generated method stub
-		// TODO Auto-generated method stub
-				/*logger.error("Detailed View init has been called");
-				//load field data
-				tFirstName.setText(author.getFirstName());
-				tLastName.setText(author.getLastName());
-				tDoB.setText(author.getDob());
-				tGender.setText(author.getGender());
-				tWebsite.setText(author.getWebsite());*/
-	//}
 }

@@ -24,18 +24,18 @@ public class Author {
 		this.id = id;
 		
 		this.firstName = first_name;
-		this.validateFirstName(first_name);
+		this.validateFirstName();
 		
 		this.lastName = last_name;
-		this.validateLastName(last_name);
+		this.validateLastName();
 		
 		this.dob = dob;
 		
 		this.gender = gender;
-		this.validateGender(gender);
+		this.validateGender();
 		
 		this.website = website;
-		this.validateWebsite(website);
+		this.validateWebsite();
 		
 	}
 	
@@ -63,7 +63,7 @@ public class Author {
 		this.firstName = first_name;
 	}
 	
-	public boolean validateFirstName(String first_name){
+	public boolean validateFirstName(){
 		if(this.firstName == "" || this.firstName.length() > 100)
 			return false;
 		else 
@@ -78,7 +78,7 @@ public class Author {
 		this.lastName = last_name;
 	}
 	
-	public boolean validateLastName(String last_name){
+	public boolean validateLastName(){
 		if(this.lastName == "" || this.lastName.length() > 100)
 			return false;
 		else
@@ -101,7 +101,7 @@ public class Author {
 		this.gender = gender;
 	}
 	
-	public boolean validateGender(String gender){
+	public boolean validateGender(){
 		if(this.gender.equals("M") || this.gender.equals("Male") || this.gender.equals("F") || this.gender.equals("Female") || this.gender.equals("Unknown"))
 			return true;
 		else
@@ -112,12 +112,12 @@ public class Author {
 		return website;
 	}
 
-	public void setWebsite(String web_site) {
-		this.website = web_site;
+	public void setWebsite(String website) {
+		this.website = website;
 	}
 	
-	public boolean validateWebsite(String website){
-		if(website == null) {
+	public boolean validateWebsite(){
+		if(this.website == null) {
 			return true;
 		}
 		else if(this.website.length() > 100)
@@ -133,13 +133,13 @@ public class Author {
 	
 	public void Save(Author author) throws Exception {
 			
-			if(this.validateFirstName(firstName) == false)
+			if(this.validateFirstName() == false)
 				throw new Exception("Validation failed");
-			if(this.validateLastName(lastName) == false)
+			if(this.validateLastName() == false)
 				throw new Exception("Validation failed");
-			if(this.validateGender(gender) == false)
+			if(this.validateGender() == false)
 				throw new Exception("Validation failed");
-			if(this.validateWebsite(website) == false)
+			if(this.validateWebsite() == false)
 				throw new Exception("Validation failed");
 			if(id != 0){
 				Launcher.authorGateway.updateAuthor(this);
