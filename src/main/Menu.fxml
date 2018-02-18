@@ -13,6 +13,7 @@
               <items>
                 <MenuItem id="authorList" fx:id="authorList" mnemonicParsing="false" onAction="#handleMenuEvent" text="Author List" />
                 <MenuItem id="aQuit" fx:id="aQuit" mnemonicParsing="false" onAction="#handleMenuEvent" text="Quit" />
+                  <MenuItem id="addAuthor" fx:id="addAuthor" mnemonicParsing="false" onAction="#handleMenuEvent" text="Add Author" />
               </items>
             </MenuButton>
          </children>

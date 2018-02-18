@@ -20,7 +20,7 @@ public class Author {
 		this.website = "";
 	}
 	
-	public Author(int id, String first_name, String last_name, String dob, String gender, String web_site){
+	public Author(int id, String first_name, String last_name, String dob, String gender, String website){
 		this.id = id;
 		
 		this.firstName = first_name;
@@ -34,9 +34,21 @@ public class Author {
 		this.gender = gender;
 		this.validateGender(gender);
 		
-		this.website = web_site;
-		this.validateWebsite(web_site);
+		this.website = website;
+		this.validateWebsite(website);
 		
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public boolean validateId(int id){
+		if(this.id < 0) {
+			return false;
+		}
+		else
+			return true;
 	}
 	
 	public int getId() {
@@ -104,11 +116,19 @@ public class Author {
 		this.website = web_site;
 	}
 	
-	public boolean validateWebsite(String web_site){
-		if(this.website.length() > 100)
+	public boolean validateWebsite(String website){
+		if(website == null) {
+			return true;
+		}
+		else if(this.website.length() > 100)
 			return false;
 		else
 			return true;
+	}
+	
+	@Override
+	public String toString() {
+		return id + " " + firstName + " " + lastName + " " + dob + " " + gender + " " + website;
 	}
 	
 	public void Save(Author author) throws Exception {
@@ -121,11 +141,11 @@ public class Author {
 				throw new Exception("Validation failed");
 			if(this.validateWebsite(website) == false)
 				throw new Exception("Validation failed");
-			/*if(id != 0){
+			if(id != 0){
 				Launcher.authorGateway.updateAuthor(this);
 			}
-			//else
+			else
 				Launcher.authorGateway.insertAuthor(this);
-		    */
+		    
 	}
 }
