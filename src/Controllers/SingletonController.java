@@ -8,7 +8,11 @@ import java.util.ResourceBundle;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
+import Book.BookDetailController;
+import Book.BookListController;
 import Model.Author;
+import Model.Book;
+import Model.Publisher;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -34,9 +38,14 @@ public class SingletonController /*implements Initializable*/ {
 	@FXML private MenuItem aQuit;
 	@FXML private MenuItem authorList;
 	@FXML private MenuItem addAuthor;
+	@FXML private MenuItem bookList;
+	@FXML private MenuItem addBook;
 	@FXML private TextField tFirstName, tLastName, tDoB, tGender, tWebsite;
 	List<Author> authors;
+	List<Book> books;
+	List<Publisher> publishers;
 	private Author author;
+	
 	final static Logger logger = LogManager.getLogger(SingletonController.class);
 	
 	protected SingletonController() {
@@ -63,7 +72,7 @@ public class SingletonController /*implements Initializable*/ {
 		}
 		 else if(event.getSource() == authorList){
 			logger.info("Author List Pressed");
-			List<Author> authors = Launcher.authorGateway.getAuthors();
+			authors = Launcher.authorGateway.getAuthors();
 			URL fxmlFile = this.getClass().getResource("AuthorList.fxml");
 			FXMLLoader loader = new FXMLLoader(fxmlFile);
 			loader.setController(new AuthorListController(authors));
@@ -79,6 +88,22 @@ public class SingletonController /*implements Initializable*/ {
 			Parent view = loader.load();
 			Launcher.rootNode.setCenter(view);
 		}
+		 else if(event.getSource() == addBook) {
+			 logger.info("Add Book was Pressed");
+			 URL fxmlFile = this.getClass().getResource("BookDetailView.fxml");
+			 FXMLLoader loader = new FXMLLoader(fxmlFile);
+			 publishers = Launcher.publisherGateway.getPublishers();
+			 loader.setController(new BookDetailController(publishers));
+			 Parent view = loader.load();
+			 Launcher.rootNode.setCenter(view);
+		 }
+		 else if(event.getSource() == bookList) {
+			 logger.info("Book list clicked");
+			 FXMLLoader loader = new FXMLLoader(getClass().getResource("BookListView.fxml"));
+			 loader.setController(new BookListController(books));
+			 Parent view = loader.load();
+			 Launcher.rootNode.setCenter(view);
+		 }
 	}
 	
 	@FXML private void handleButtonAction(ActionEvent event) throws Exception {

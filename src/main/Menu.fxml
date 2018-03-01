@@ -13,7 +13,9 @@
               <items>
                 <MenuItem id="authorList" fx:id="authorList" mnemonicParsing="false" onAction="#handleMenuEvent" text="Author List" />
                 <MenuItem id="aQuit" fx:id="aQuit" mnemonicParsing="false" onAction="#handleMenuEvent" text="Quit" />
-                  <MenuItem id="addAuthor" fx:id="addAuthor" mnemonicParsing="false" onAction="#handleMenuEvent" text="Add Author" />
+                <MenuItem id="addAuthor" fx:id="addAuthor" mnemonicParsing="false" onAction="#handleMenuEvent" text="Add Author" />
+                <MenuItem id="bookList" fx:id="bookList" mnemonicParsing="false" onAction="#handleMenuEvent" text="Book List" />
+                <MenuItem id="addBook" fx:id="addBook" mnemonicParsing="false" onAction="#handleMenuEvent" text="Add Book" />
               </items>
             </MenuButton>
          </children>
