@@ -1,6 +1,6 @@
 package Controllers;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -90,7 +90,7 @@ public class SingletonController /*implements Initializable*/ {
 		}
 		 else if(event.getSource() == addBook) {
 			 logger.info("Add Book was Pressed");
-			 URL fxmlFile = this.getClass().getResource("BookDetailView.fxml");
+			 URL fxmlFile = this.getClass().getResource("/Book/BookDetailView.fxml");
 			 FXMLLoader loader = new FXMLLoader(fxmlFile);
 			 publishers = Launcher.publisherGateway.getPublishers();
 			 loader.setController(new BookDetailController(publishers));
@@ -99,7 +99,11 @@ public class SingletonController /*implements Initializable*/ {
 		 }
 		 else if(event.getSource() == bookList) {
 			 logger.info("Book list clicked");
-			 FXMLLoader loader = new FXMLLoader(getClass().getResource("BookListView.fxml"));
+			 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookListView.fxml"));
+			 books = Launcher.bookGateway.getBooks();
+			 for(Book x : books) {
+				 System.out.println(x);
+			 }
 			 loader.setController(new BookListController(books));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);

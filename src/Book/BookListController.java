@@ -3,6 +3,7 @@ package Book;
 import java.util.List;
 
 import Model.Book;
+import Model.Publisher;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;

@@ -11,6 +11,7 @@ import com.mysql.jdbc.PreparedStatement;
 import Controllers.*;
 import Model.Author;
 import Model.AuthorTableGateway;
+import Model.BookTableGateway;
 import Model.PublisherTableGateway;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
@@ -29,6 +30,7 @@ public class Launcher extends Application {
 	//public static AuthorListController aController
 	public static AuthorTableGateway authorGateway;
 	public static PublisherTableGateway publisherGateway;
+	public static BookTableGateway bookGateway;
 	private static Logger logger = LogManager.getLogger(Launcher.class);
 	
 	public static void main(String[] args) {
@@ -43,6 +45,7 @@ public class Launcher extends Application {
 		logger.info("Launcher init called");
 		authorGateway = new AuthorTableGateway();
 		publisherGateway = new PublisherTableGateway();
+		bookGateway = new BookTableGateway();
 	}
 	
 	@Override
@@ -53,6 +56,7 @@ public class Launcher extends Application {
 		logger.info("Launcher stop called");
 		authorGateway.close();
 		publisherGateway.close();
+		bookGateway.close();
 	}
 
 	@Override

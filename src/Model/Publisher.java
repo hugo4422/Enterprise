@@ -26,4 +26,8 @@ public class Publisher {
 	public void setPublisherName(SimpleStringProperty publisherName) {
 		this.publisherName = publisherName;
 	}
+	
+	public String toString() {
+		return id + " " + publisherName;
+	}
 }

@@ -20,7 +20,7 @@ public class Author {
 		this.website = "";
 	}
 	
-	public Author(int id, String first_name, String last_name, String dob, String gender, String website){
+	public Author(int id, String first_name, String last_name, String dob, String gender, String website) {
 		this.id = id;
 		
 		this.firstName = first_name;
