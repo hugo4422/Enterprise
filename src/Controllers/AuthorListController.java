@@ -30,7 +30,7 @@ public class AuthorListController {
 	@FXML private ListView<Author> itemList;
 	private BorderPane rootNode;
 	@FXML private MenuItem aQuit;
-	@FXML private MenuItem authorList;
+	@FXML private MenuItem addAuthor;
 	private static Logger logger = LogManager.getLogger(AuthorListController.class);
 	@FXML private Button authorDelete;
 	private Author author;
@@ -46,6 +46,15 @@ public class AuthorListController {
 	@FXML void handleListAction(ActionEvent event) throws IOException {
 		Object source = event.getSource();
 		//Press delete then select author to be deleted
+		if(source == addAuthor) {
+			logger.info("Add author was called");
+			SingletonController.getInstance().setAuthor(new Author(0, "", "", "", "", ""));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("AuthorDetailView.fxml"));
+			loader.setController(SingletonController.getInstance());
+			Parent view = loader.load();
+			Launcher.rootNode.setCenter(view);
+		}
+		
 		itemList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent click){
 				if(click.getClickCount() == 1){

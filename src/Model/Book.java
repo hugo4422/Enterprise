@@ -1,5 +1,6 @@
 package Model;
 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
@@ -25,11 +26,21 @@ public class Book {
 		this.yearPublished = new SimpleIntegerProperty(year_published);
 		this.publisher = new SimpleObjectProperty<Publisher>(Launcher.publisherGateway.getPublisherById(publisher_id));
 		this.isbn = new SimpleStringProperty(isbn);
-		this.dateAdded = new SimpleObjectProperty<LocalDate>(timestamp.toLocalDateTime().toLocalDate());
+		if(timestamp != null) {
+			this.dateAdded = new SimpleObjectProperty<LocalDate>(timestamp.toLocalDateTime().toLocalDate());
+		}
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getId() {
+		return this.id;
 	}
 
-	public SimpleStringProperty getTitle() {
-		return title;
+	public String getTitle() {
+		return title.getValue();
 	}
 	
 	public void setTitle(SimpleStringProperty title) {
@@ -40,8 +51,8 @@ public class Book {
 		return (title.getValue().length() < 255 && title.getValue().length() > 1);
 	}
 	
-	public SimpleStringProperty getSummary() {
-		return summary;
+	public String getSummary() {
+		return summary.getValue();
 	}
 	
 	public void setSummary(SimpleStringProperty summary) {
@@ -49,11 +60,14 @@ public class Book {
 	}
 	
 	public boolean validateSummary() {
+		if(summary.getValue() == null) {
+			return true;
+		}
 		return (summary.getValue().length() < 65536);
 	}
 	
-	public SimpleIntegerProperty getYearPublished() {
-		return yearPublished;
+	public int getYearPublished() {
+		return yearPublished.getValue();
 	}
 	
 	public void setYearPublished(SimpleIntegerProperty yearPublished) {
@@ -64,24 +78,24 @@ public class Book {
 		return (yearPublished.get() <= 2018);
 	}
 	
-	public SimpleObjectProperty<Publisher> getPublisher() {
-		return publisher;
+	public int getPublisherId() {
+		return publisher.getValue().getId();
 	}
 	
 	public void setPublisher(SimpleObjectProperty<Publisher> publisher) {
 		this.publisher = publisher;
 	}
 	
-	public SimpleObjectProperty<LocalDate> getDateAdded() {
-		return dateAdded;
+	public String getDateAdded() {
+		return dateAdded.getValue().toString();
 	}
 	
 	public void setDateAdded(SimpleObjectProperty<LocalDate> dateAdded) {
 		this.dateAdded = dateAdded;
 	}
 	
-	public SimpleStringProperty getIsbn() {
-		return isbn;
+	public String getIsbn() {
+		return isbn.getValue();
 	}
 	
 	public void setIsbn(SimpleStringProperty isbn) {
@@ -89,7 +103,44 @@ public class Book {
 	}
 	
 	public boolean validateIsbn() {
+		if(isbn == null) {
+			return false;
+		}
 		return (isbn.getValue().length() <= 13);
+	}
+	
+	public void Save(Book oldBook, Book book) throws Exception {
+		
+		if(this.validateTitle() == false)
+			throw new Exception("Validation failed");
+		if(this.validateSummary() == false)
+			throw new Exception("Validation failed");
+		if(this.validateIsbn() == false)
+			throw new Exception("Validation failed");
+		if(this.validateYearPublished() == false)
+			throw new Exception("Validation failed");
+		if(id != 0){
+			compareBook(oldBook, book);
+			Launcher.bookGateway.updateBook(this);
+		}
+		else {
+			Launcher.bookGateway.insertAuditTrail(this.id, "Book Added");
+			Launcher.bookGateway.insertBook(this);
+		}
+	}
+	
+	public void compareBook(Book oldBook, Book newBook) throws SQLException {
+		if(oldBook.getTitle() != newBook.getTitle()) {
+			Launcher.bookGateway.insertAuditTrail(this.id, "Title changed from " + oldBook.getTitle() + " to " + newBook.getTitle());
+		} else if(oldBook.getIsbn() != newBook.getIsbn()) {
+			Launcher.bookGateway.insertAuditTrail(this.id, "ISBN changed from " + oldBook.getIsbn() + " to " + newBook.getIsbn());
+		} else if(oldBook.getSummary() != newBook.getSummary()) {
+			Launcher.bookGateway.insertAuditTrail(this.id, "Summary changed from " + oldBook.getSummary() + " to " + newBook.getSummary());
+		} else if(oldBook.getPublisherId() != newBook.getPublisherId()) {
+			Launcher.bookGateway.insertAuditTrail(this.id, "Publisher id changed from " + oldBook.getPublisherId() + " to " + newBook.getPublisherId());
+		} else if(oldBook.getYearPublished() != newBook.getYearPublished()) {
+			Launcher.bookGateway.insertAuditTrail(this.id, "Year Published changed from " + oldBook.getYearPublished() + " to " + newBook.getYearPublished());
+		}
 	}
 	
 	public String toString() {

@@ -12,9 +12,10 @@
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0">
          <children>
             <ListView fx:id="itemList" layoutX="14.0" layoutY="43.0" onMouseClicked="#handleListAction" prefHeight="338.0" prefWidth="559.0" />
-            <MenuButton layoutX="7.0" layoutY="1.0" mnemonicParsing="false" text="MenuButton">
+            <MenuButton fx:id="dropList" layoutX="7.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleListAction" text="MenuButton">
               <items>
-                <MenuItem id="aQuit" fx:id="aQuit" mnemonicParsing="false" onAction="#handleMenuEvent" text="Quit" />
+                <MenuItem id="addAuthor" fx:id="addAuthor" mnemonicParsing="false" onAction="#handleListAction" text="Add Author" />
+              	<MenuItem id="aQuit" fx:id="aQuit" mnemonicParsing="false" onAction="#handleListAction" text="Quit" />
               </items>
             </MenuButton>
             <Button id="authorDelete" fx:id="authorDelete" layoutX="507.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleListAction" text="Delete" />

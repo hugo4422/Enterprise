@@ -92,8 +92,8 @@ public class SingletonController /*implements Initializable*/ {
 			 logger.info("Add Book was Pressed");
 			 URL fxmlFile = this.getClass().getResource("/Book/BookDetailView.fxml");
 			 FXMLLoader loader = new FXMLLoader(fxmlFile);
-			 publishers = Launcher.publisherGateway.getPublishers();
-			 loader.setController(new BookDetailController(publishers));
+			 //publishers = Launcher.publisherGateway.getPublishers();
+			 loader.setController(new BookDetailController(new Book(0, null, null, 0, 0, null, null)));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
 		 }
