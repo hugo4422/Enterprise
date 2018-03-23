@@ -2,6 +2,9 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.layout.Pane?>
 
@@ -10,5 +13,25 @@
       <TextField fx:id="tfBookSearch" layoutX="75.0" layoutY="30.0" prefHeight="13.0" prefWidth="451.0" promptText="Search for a Book" />
       <Button fx:id="bSearch" layoutX="274.0" layoutY="65.0" mnemonicParsing="false" onAction="#handleSearchClick" text="Search" />
       <ListView fx:id="bookList" layoutX="75.0" layoutY="98.0" prefHeight="281.0" prefWidth="451.0" />
+      <MenuBar layoutY="2.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="Author">
+            <items>
+              <MenuItem fx:id="authorList" mnemonicParsing="false" onAction="#handleListAction" text="Author List" />
+                  <MenuItem fx:id="addAuthor" mnemonicParsing="false" onAction="#handleListAction" text="Add Author" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Book">
+            <items>
+              <MenuItem fx:id="bookView" mnemonicParsing="false" onAction="#handleListAction" text="Book List" />
+            </items>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Quit">
+            <items>
+              <MenuItem fx:id="quit" mnemonicParsing="false" onAction="#handleListAction" text="Quit" />
+            </items>
+          </Menu>
+        </menus>
+      </MenuBar>
    </children>
 </Pane>

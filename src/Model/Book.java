@@ -1,6 +1,6 @@
 package Model;
 
-import java.sql.SQLException;
+import java.sql.SQLException; 
 import java.sql.Timestamp;
 import java.time.LocalDate;
 
@@ -18,6 +18,7 @@ public class Book {
 	private SimpleObjectProperty<Publisher> publisher;
 	private SimpleStringProperty isbn;
 	private SimpleObjectProperty<LocalDate> dateAdded;
+	private Timestamp time;
 	
 	public Book(int id, String title, String summary, int year_published, int publisher_id, String isbn, Timestamp timestamp) {
 		this.id = id;
@@ -28,12 +29,15 @@ public class Book {
 		this.isbn = new SimpleStringProperty(isbn);
 		if(timestamp != null) {
 			this.dateAdded = new SimpleObjectProperty<LocalDate>(timestamp.toLocalDateTime().toLocalDate());
+			this.time = timestamp;
 		}
 	}
 	
 	public void setId(int id) {
 		this.id = id;
 	}
+	
+	
 	
 	public int getId() {
 		return this.id;
@@ -109,6 +113,10 @@ public class Book {
 		return (isbn.getValue().length() <= 13);
 	}
 	
+	public Timestamp getTime() {
+		return this.time;
+	}
+	
 	public void Save(Book oldBook, Book book) throws Exception {
 		
 		if(this.validateTitle() == false)
@@ -130,15 +138,19 @@ public class Book {
 	}
 	
 	public void compareBook(Book oldBook, Book newBook) throws SQLException {
-		if(oldBook.getTitle() != newBook.getTitle()) {
+		if(!oldBook.getTitle().equals(newBook.getTitle())) {
 			Launcher.bookGateway.insertAuditTrail(this.id, "Title changed from " + oldBook.getTitle() + " to " + newBook.getTitle());
-		} else if(oldBook.getIsbn() != newBook.getIsbn()) {
+		}
+		if(!oldBook.getIsbn().equals(newBook.getIsbn())) {
 			Launcher.bookGateway.insertAuditTrail(this.id, "ISBN changed from " + oldBook.getIsbn() + " to " + newBook.getIsbn());
-		} else if(oldBook.getSummary() != newBook.getSummary()) {
+		} 
+		if(!oldBook.getSummary().equals(newBook.getSummary())) {
 			Launcher.bookGateway.insertAuditTrail(this.id, "Summary changed from " + oldBook.getSummary() + " to " + newBook.getSummary());
-		} else if(oldBook.getPublisherId() != newBook.getPublisherId()) {
+		}
+		if(oldBook.getPublisherId() != newBook.getPublisherId()) {
 			Launcher.bookGateway.insertAuditTrail(this.id, "Publisher id changed from " + oldBook.getPublisherId() + " to " + newBook.getPublisherId());
-		} else if(oldBook.getYearPublished() != newBook.getYearPublished()) {
+		}
+		if(oldBook.getYearPublished() != newBook.getYearPublished()) {
 			Launcher.bookGateway.insertAuditTrail(this.id, "Year Published changed from " + oldBook.getYearPublished() + " to " + newBook.getYearPublished());
 		}
 	}

@@ -1,17 +1,20 @@
 package Book;
 
 import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import Controllers.AuthorListController;
 import Controllers.SingletonController;
 import Model.Author;
 import Model.Book;
 import Model.Publisher;
+import javafx.application.Platform;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -20,6 +23,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
+import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.input.MouseEvent;
 import main.Launcher;
@@ -27,7 +31,12 @@ import main.Launcher;
 public class BookListController {
 	@FXML TextField tfBookSearch;
 	@FXML Button bSearch;
+	@FXML private MenuItem authorList;
+	@FXML private MenuItem addAuthor;
+	@FXML private MenuItem addBook;
+	@FXML private MenuItem quit;
 	@FXML ListView<Book> bookList;
+	private List<Author> authors;
 	private List<Book> books;
 	
 	final static Logger logger = LogManager.getLogger(SingletonController.class);
@@ -46,6 +55,38 @@ public class BookListController {
 			Parent view = loader.load();
 			Launcher.rootNode.setCenter(view);
 		}
+	}
+	
+	@FXML void handleListAction(ActionEvent event) throws IOException {
+		Object source = event.getSource();
+		//Press delete then select author to be deleted
+		if(source == addAuthor) {
+			logger.info("Add author was called");
+			SingletonController.getInstance().setAuthor(new Author(0, "", "", "", "", ""));
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Controllers/AuthorDetailView.fxml"));
+			loader.setController(SingletonController.getInstance());
+			Parent view = loader.load();
+			Launcher.rootNode.setCenter(view);
+		} else if(event.getSource() == authorList){
+			logger.info("Author List Pressed");
+			authors = Launcher.authorGateway.getAuthors();
+			URL fxmlFile = this.getClass().getResource("/Controllers/AuthorList.fxml");
+			FXMLLoader loader = new FXMLLoader(fxmlFile);
+			loader.setController(new AuthorListController(authors));
+			Parent view = loader.load();
+			Launcher.rootNode.setCenter(view);
+		} else if(event.getSource() == quit) {
+			logger.error("Quiting");
+			Platform.exit();
+		} else if(event.getSource() == addBook) {
+			 logger.info("Add Book was Pressed");
+			 URL fxmlFile = this.getClass().getResource("/Book/BookDetailView.fxml");
+			 FXMLLoader loader = new FXMLLoader(fxmlFile);
+			 //publishers = Launcher.publisherGateway.getPublishers();
+			 loader.setController(new BookDetailController(new Book(0, null, null, 0, 0, null, null)));
+			 Parent view = loader.load();
+			 Launcher.rootNode.setCenter(view);
+		 }
 	}
 	
 	public void initialize(){

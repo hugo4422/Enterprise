@@ -2,8 +2,8 @@ package Book;
 
 import java.util.List;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import Controllers.SingletonController;
 import Model.Author;
@@ -32,11 +32,12 @@ public class BookDetailController {
 	@FXML private TextField tfIsbn;
 	@FXML private TextField tfDateAdded;
 	@FXML private Button bAuditTrail;
+
 	private List<Publisher> pubList;
 	private List<Book> books;
 	private Book book;
 	
-	final static Logger logger = LogManager.getLogger(SingletonController.class);
+	final static Logger logger = LogManager.getLogger();
 	
 	public BookDetailController(Book book) {
 		this.book = book;
@@ -45,7 +46,7 @@ public class BookDetailController {
 	@FXML
 	private void handleButtonClick(ActionEvent event) throws Exception {
 		if (event.getSource() == bSave) {
-			Book oldBook = book;
+			Book oldBook = new Book(book.getId(), book.getTitle(), book.getSummary(), book.getYearPublished(), book.getPublisherId(), book.getIsbn(), book.getTime());
 			book.setTitle(new SimpleStringProperty(tfTitle.getText()));
 			book.setYearPublished(new SimpleIntegerProperty(Integer.parseInt(tfYearPub.getText())));
 			book.setSummary(new SimpleStringProperty(taSummary.getText()));

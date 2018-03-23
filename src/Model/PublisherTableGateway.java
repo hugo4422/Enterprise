@@ -1,6 +1,6 @@
 package Model;
 
-import java.sql.PreparedStatement;
+import java.sql.PreparedStatement; 
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -20,12 +20,12 @@ import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 import javafx.beans.property.SimpleStringProperty;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class PublisherTableGateway {
 	private Connection conn;
-	private static Logger logger = LogManager.getLogger(PublisherTableGateway.class);
+	private static Logger logger = LogManager.getLogger();
 	
 	public PublisherTableGateway() throws GatewayException{
 		conn = null;

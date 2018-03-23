@@ -12,7 +12,7 @@
       <TextField id="tFirstName" fx:id="tFirstName" layoutX="45.0" layoutY="103.0" />
       <TextField id="tLastName" fx:id="tLastName" layoutX="219.0" layoutY="103.0" />
       <TextField id="tDoB" fx:id="tDoB" layoutX="45.0" layoutY="178.0" />
-      <TextField id="tEmail" fx:id="tGender" layoutX="219.0" layoutY="178.0" />
+      <TextField id="tEmail" fx:id="tGender" layoutX="219.0" layoutY="178.0" promptText="(M or F for Male/Female)" />
       <TextField fx:id="tWebsite" layoutX="134.0" layoutY="253.0" />
       <Button id="bSave" fx:id="bSave" layoutX="313.0" layoutY="318.0" mnemonicParsing="false" onAction="#handleButtonAction" text="Save" />
       <Label layoutX="42.0" layoutY="86.0" prefHeight="17.0" prefWidth="57.0" text="First Name" />

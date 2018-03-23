@@ -13,14 +13,14 @@ import java.util.Properties;
 
 import Book.*;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.mysql.jdbc.jdbc2.optional.MysqlDataSource;
 
 public class BookTableGateway {
 	private Connection conn;
-	private static Logger logger = LogManager.getLogger(BookTableGateway.class);
+	private static Logger logger = LogManager.getLogger();
 
 	public BookTableGateway() throws GatewayException {
 		conn = null;
@@ -80,7 +80,7 @@ public class BookTableGateway {
 		ResultSet rs = null;
 
 		try {
-			st = conn.prepareStatement("Select * from Book_Audit_Trail WHERE id = '" + book.getId() + "'");
+			st = conn.prepareStatement("Select * from Book_Audit_Trail WHERE book_id = '" + book.getId() + "'");
 			rs = st.executeQuery();
 
 			while (rs.next()) {

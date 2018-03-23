@@ -1,10 +1,10 @@
 package main;
 
-import java.net.URL;
+import java.net.URL; 
 import java.sql.SQLException;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import com.mysql.jdbc.PreparedStatement;
 
@@ -31,7 +31,7 @@ public class Launcher extends Application {
 	public static AuthorTableGateway authorGateway;
 	public static PublisherTableGateway publisherGateway;
 	public static BookTableGateway bookGateway;
-	private static Logger logger = LogManager.getLogger(Launcher.class);
+	private static Logger logger = LogManager.getLogger();
 	
 	public static void main(String[] args) {
 		launch(args);

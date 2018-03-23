@@ -2,7 +2,8 @@
 
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ListView?>
-<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
 <?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -12,13 +13,27 @@
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="400.0" prefWidth="600.0">
          <children>
             <ListView fx:id="itemList" layoutX="14.0" layoutY="43.0" onMouseClicked="#handleListAction" prefHeight="338.0" prefWidth="559.0" />
-            <MenuButton fx:id="dropList" layoutX="7.0" layoutY="1.0" mnemonicParsing="false" onAction="#handleListAction" text="MenuButton">
-              <items>
-                <MenuItem id="addAuthor" fx:id="addAuthor" mnemonicParsing="false" onAction="#handleListAction" text="Add Author" />
-              	<MenuItem id="aQuit" fx:id="aQuit" mnemonicParsing="false" onAction="#handleListAction" text="Quit" />
-              </items>
-            </MenuButton>
             <Button id="authorDelete" fx:id="authorDelete" layoutX="507.0" layoutY="2.0" mnemonicParsing="false" onAction="#handleListAction" text="Delete" />
+            <MenuBar layoutY="2.0">
+              <menus>
+                <Menu mnemonicParsing="false" text="Author">
+                  <items>
+                    <MenuItem fx:id="addAuthor" mnemonicParsing="false" onAction="#handleListAction" text="Add Author" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Book">
+                  <items>
+                    <MenuItem fx:id="bookList" mnemonicParsing="false" onAction="#handleListAction" text="Book List" />
+                        <MenuItem fx:id="addBook" mnemonicParsing="false" onAction="#handleListAction" text="Add Book" />
+                  </items>
+                </Menu>
+                <Menu mnemonicParsing="false" text="Quit">
+                  <items>
+                    <MenuItem fx:id="quit" mnemonicParsing="false" onAction="#handleListAction" text="Quit" />
+                  </items>
+                </Menu>
+              </menus>
+            </MenuBar>
          </children></AnchorPane>
   </content>
 </ScrollPane>

@@ -1,6 +1,6 @@
 package Model;
 
-import Controllers.*;
+import Controllers.*; 
 import Book.*;
 import main.*;
 
@@ -9,8 +9,8 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class AuditTrailEntry {
 	

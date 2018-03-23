@@ -1,14 +1,17 @@
 package Controllers;
 
-import java.io.IOException; 
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
-import org.apache.log4j.LogManager;
-import org.apache.log4j.Logger;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
+import Book.BookDetailController;
+import Book.BookListController;
 import Model.Author;
+import Model.Book;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -29,12 +32,16 @@ public class AuthorListController {
 	
 	@FXML private ListView<Author> itemList;
 	private BorderPane rootNode;
-	@FXML private MenuItem aQuit;
+	@FXML private MenuItem authorList;
 	@FXML private MenuItem addAuthor;
+	@FXML private MenuItem bookList;
+	@FXML private MenuItem addBook;
+	@FXML private MenuItem quit;
 	private static Logger logger = LogManager.getLogger(AuthorListController.class);
 	@FXML private Button authorDelete;
 	private Author author;
 	private List<Author> authors;
+	private List<Book> books;
 	
 	public AuthorListController(List<Author> authors) {
 		// TODO Auto-generated constructor stub
@@ -53,7 +60,29 @@ public class AuthorListController {
 			loader.setController(SingletonController.getInstance());
 			Parent view = loader.load();
 			Launcher.rootNode.setCenter(view);
-		}
+		} else if(event.getSource() == quit) {
+			logger.error("Quiting");
+			Platform.exit();
+		} else if(event.getSource() == addBook) {
+			 logger.info("Add Book was Pressed");
+			 URL fxmlFile = this.getClass().getResource("/Book/BookDetailView.fxml");
+			 FXMLLoader loader = new FXMLLoader(fxmlFile);
+			 //publishers = Launcher.publisherGateway.getPublishers();
+			 loader.setController(new BookDetailController(new Book(0, null, null, 0, 0, null, null)));
+			 Parent view = loader.load();
+			 Launcher.rootNode.setCenter(view);
+		 }
+		 else if(event.getSource() == bookList) {
+			 logger.info("Book list clicked");
+			 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookListView.fxml"));
+			 books = Launcher.bookGateway.getBooks();
+			 for(Book x : books) {
+				 System.out.println(x);
+			 }
+			 loader.setController(new BookListController(books));
+			 Parent view = loader.load();
+			 Launcher.rootNode.setCenter(view);
+		 }
 		
 		itemList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			public void handle(MouseEvent click){
@@ -108,13 +137,5 @@ public class AuthorListController {
 	public void setRootNode(BorderPane rootNode) {
 		this.rootNode = rootNode;
 	}
-	
-	@FXML void handleMenuEvent(ActionEvent event) throws IOException {
-		
-		 if(event.getSource() == aQuit) { 
-			Platform.exit();
-			}
-	}
-	
 	
 }
