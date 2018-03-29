@@ -1,10 +1,12 @@
 package Model;
 
-import java.io.FileInputStream; 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
@@ -48,6 +50,32 @@ public class AuthorTableGateway {
 		}
 		
 		return authors;
+	}
+	
+	public LocalDateTime getAuthorLastModifiedById(int id) throws GatewayException {
+		LocalDateTime date = null;
+		PreparedStatement st = null;
+		try {
+			st = conn.prepareStatement("select * from Author where id = ?");
+			st.setInt(1, id);
+			ResultSet rs = st.executeQuery();
+			rs.next();
+			Timestamp ts = rs.getTimestamp("last_modified");
+			date = ts.toLocalDateTime();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			throw new GatewayException(e);
+		} finally {
+			try {
+				if(st != null)
+					st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+				throw new GatewayException(e);
+			}
+		}
+
+		return date;
 	}
 	
 	public AuthorTableGateway() throws GatewayException{

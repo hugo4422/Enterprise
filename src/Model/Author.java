@@ -1,5 +1,8 @@
 package Model;
 
+import java.time.LocalDateTime;
+
+import javafx.beans.property.SimpleObjectProperty;
 import main.Launcher;
 
 public class Author {
@@ -10,6 +13,7 @@ public class Author {
 	private String gender;
 	private String website;
 	private String firstName;
+	private SimpleObjectProperty<LocalDateTime> lastModified;
 	
 	public Author(){
 		this.id = 0;
@@ -18,6 +22,7 @@ public class Author {
 		this.dob = "";
 		this.gender = "";
 		this.website = "";
+		lastModified = new SimpleObjectProperty<LocalDateTime>();
 	}
 	
 	public Author(int id, String first_name, String last_name, String dob, String gender, String website) {
@@ -124,6 +129,14 @@ public class Author {
 			return false;
 		else
 			return true;
+	}
+	
+	public LocalDateTime getLastModified() {
+		return lastModified.get();
+	}
+	
+	public void setLastModified(LocalDateTime lastModified) {
+		this.lastModified.set(lastModified);
 	}
 	
 	@Override

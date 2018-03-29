@@ -2,6 +2,7 @@ package Controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -45,6 +46,8 @@ public class SingletonController /*implements Initializable*/ {
 	List<Book> books;
 	List<Publisher> publishers;
 	private Author author;
+	
+	private LocalDateTime originalTimestamp;
 	
 	final static Logger logger = LogManager.getLogger(SingletonController.class);
 	
@@ -113,6 +116,23 @@ public class SingletonController /*implements Initializable*/ {
 	@FXML private void handleButtonAction(ActionEvent event) throws Exception {
 		
 		if(event.getSource() == bSave) {
+			try {
+	    		LocalDateTime currentTimestamp = Launcher.authorGateway.getAuthorLastModifiedById(author.getId());
+	    		if(!currentTimestamp.equals(originalTimestamp)) {
+	    			logger.error("Cannot Save! \n Record has changed since this view loaded \n Please refresh your view and try again. :(");
+	    			System.out.println("Original Timestamp = " + originalTimestamp + " \nCurrent Timestamp = " + currentTimestamp);
+	    			return;
+	    		}
+	    	
+	    		Launcher.authorGateway.updateAuthor(author);
+	    		originalTimestamp = Launcher.authorGateway.getAuthorLastModifiedById(author.getId());
+	    		System.out.println(originalTimestamp + " " + currentTimestamp);
+
+				logger.error("Changes Saved", "Your changes have been saved", "");
+
+	    	} catch(Exception e) {
+	    		logger.error(e.getMessage());
+	    	}
 			author.setFirstName(tFirstName.getText());
 			author.setLastName(tLastName.getText());
 			author.setDob(tDoB.getText());
@@ -146,6 +166,7 @@ public class SingletonController /*implements Initializable*/ {
 			tGender.setText(author.getGender());
 			tWebsite.setText(author.getWebsite());
 		}
+		
 	}
 
 	public Author getAuthor() {
