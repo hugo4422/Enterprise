@@ -12,6 +12,7 @@ import Book.BookDetailController;
 import Book.BookListController;
 import Model.Author;
 import Model.Book;
+import Model.GatewayException;
 import javafx.application.Platform;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -75,11 +76,11 @@ public class AuthorListController {
 		 else if(event.getSource() == bookList) {
 			 logger.info("Book list clicked");
 			 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookListView.fxml"));
-			 books = Launcher.bookGateway.getBooks();
+			 books = Launcher.bookGateway.getBooks(0);
 			 for(Book x : books) {
 				 System.out.println(x);
 			 }
-			 loader.setController(new BookListController(books));
+			 loader.setController(new BookListController(books, 0));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
 		 }
@@ -121,6 +122,12 @@ public class AuthorListController {
 					
 					try{
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("AuthorDetailView.fxml"));
+						try {
+							selected.setOrigModified(Launcher.authorGateway.getAuthorLastModifiedById(selected.getId()));
+						} catch (GatewayException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						SingletonController.getInstance().setAuthor(selected);
 						loader.setController(SingletonController.getInstance());
 						Parent view = loader.load();

@@ -1,5 +1,6 @@
 package Model;
 
+import java.sql.SQLException;
 import java.time.LocalDateTime;
 
 import javafx.beans.property.SimpleObjectProperty;
@@ -14,6 +15,7 @@ public class Author {
 	private String website;
 	private String firstName;
 	private SimpleObjectProperty<LocalDateTime> lastModified;
+	private SimpleObjectProperty<LocalDateTime> originalMod;
 	
 	public Author(){
 		this.id = 0;
@@ -41,6 +43,9 @@ public class Author {
 		
 		this.website = website;
 		this.validateWebsite();
+		
+		lastModified = new SimpleObjectProperty<LocalDateTime>();
+		originalMod = new SimpleObjectProperty<LocalDateTime>();
 		
 	}
 	
@@ -135,8 +140,16 @@ public class Author {
 		return lastModified.get();
 	}
 	
-	public void setLastModified(LocalDateTime lastModified) {
-		this.lastModified.set(lastModified);
+	public void setLastModified(LocalDateTime newDate) {
+		this.lastModified.set(newDate);
+	}
+	
+	public LocalDateTime getOrigModified() {
+		return originalMod.get();
+	}
+	
+	public void setOrigModified(LocalDateTime newDate) {
+		this.originalMod.set(newDate);
 	}
 	
 	@Override
@@ -144,7 +157,7 @@ public class Author {
 		return id + " " + firstName + " " + lastName + " " + dob + " " + gender + " " + website;
 	}
 	
-	public void Save(Author author) throws Exception {
+	public void Save(Author oldAuthor, Author author) throws Exception {
 			
 			if(this.validateFirstName() == false)
 				throw new Exception("Validation failed");
@@ -155,10 +168,30 @@ public class Author {
 			if(this.validateWebsite() == false)
 				throw new Exception("Validation failed");
 			if(id != 0){
+				compareBook(oldAuthor, author);
 				Launcher.authorGateway.updateAuthor(this);
-			}
-			else
+			} else {
+				System.out.println("wut");
+				Launcher.authorGateway.insertAuditTrail(this.id, "Author Added");
 				Launcher.authorGateway.insertAuthor(this);
-		    
+			}
+	}
+	
+	public void compareBook(Author oldAuthor, Author newAuthor) throws SQLException {
+		if(!oldAuthor.getFirstName().equals(newAuthor.getFirstName())) {
+			Launcher.authorGateway.insertAuditTrail(this.id, "First Name changed from " + oldAuthor.getFirstName() + " to " + newAuthor.getFirstName());
+		}
+		if(!oldAuthor.getLastName().equals(newAuthor.getLastName())) {
+			Launcher.authorGateway.insertAuditTrail(this.id, "Last Name changed from " + oldAuthor.getLastName() + " to " + newAuthor.getLastName());
+		} 
+		if(!oldAuthor.getDob().equals(newAuthor.getDob())) {
+			Launcher.authorGateway.insertAuditTrail(this.id, "Date of Birth changed from " + oldAuthor.getDob() + " to " + newAuthor.getDob());
+		}
+		if(!oldAuthor.getGender().equals(newAuthor.getGender())) {
+			Launcher.authorGateway.insertAuditTrail(this.id, "Author Gender changed from " + oldAuthor.getGender() + " to " + newAuthor.getGender());
+		}
+		if(!oldAuthor.getWebsite().equals(newAuthor.getWebsite())) {
+			Launcher.authorGateway.insertAuditTrail(this.id, "Author website changed from " + oldAuthor.getWebsite() + " to " + newAuthor.getWebsite());
+		}
 	}
 }

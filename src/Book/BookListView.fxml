@@ -11,8 +11,8 @@
 <Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/9.0.1" xmlns:fx="http://javafx.com/fxml/1">
    <children>
       <TextField fx:id="tfBookSearch" layoutX="75.0" layoutY="30.0" prefHeight="13.0" prefWidth="451.0" promptText="Search for a Book" />
-      <Button fx:id="bSearch" layoutX="274.0" layoutY="65.0" mnemonicParsing="false" onAction="#handleSearchClick" text="Search" />
-      <ListView fx:id="bookList" layoutX="75.0" layoutY="98.0" prefHeight="281.0" prefWidth="451.0" />
+      <Button fx:id="bSearch" layoutX="274.0" layoutY="55.0" mnemonicParsing="false" onAction="#handleSearchClick" text="Search" />
+      <ListView fx:id="bookList" layoutX="74.0" layoutY="88.0" prefHeight="274.0" prefWidth="451.0" />
       <MenuBar layoutY="2.0">
         <menus>
           <Menu mnemonicParsing="false" text="Author">
@@ -33,5 +33,9 @@
           </Menu>
         </menus>
       </MenuBar>
+      <Button fx:id="bPrev" layoutX="221.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleListPaging" text="&lt; Prev Page" />
+      <Button fx:id="bNext" layoutX="301.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleListPaging" text="Next Page &gt;" />
+      <Button fx:id="bFirst" layoutX="147.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleListPaging" text="First Page" />
+      <Button fx:id="bLast" layoutX="391.0" layoutY="362.0" mnemonicParsing="false" onAction="#handleListPaging" text="Last Page" />
    </children>
 </Pane>

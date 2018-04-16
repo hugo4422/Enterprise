@@ -52,6 +52,34 @@ public class AuthorTableGateway {
 		return authors;
 	}
 	
+	public Author getAuthorById(int id) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		Author author = null;
+		
+		try{
+			st = conn.prepareStatement("Select * from Author where id = ?");
+			st.setInt(1, id);
+			rs = st.executeQuery();
+			while(rs.next()) {
+				author = new Author(rs.getInt("id"), rs.getString("first_name"), rs.getString("last_name"), rs.getString("dob"), rs.getString("gender"), rs.getString("website"));
+			}
+		} catch (SQLException e){
+			e.printStackTrace();
+		} finally {
+			try{
+				if(rs != null)
+					rs.close();
+				if(st != null)
+					st.close();
+			} catch (SQLException e){
+				e.printStackTrace();
+			}
+		}
+		
+		return author;
+	}
+	
 	public LocalDateTime getAuthorLastModifiedById(int id) throws GatewayException {
 		LocalDateTime date = null;
 		PreparedStatement st = null;
@@ -156,6 +184,62 @@ public class AuthorTableGateway {
 				e.printStackTrace();
 			}
 		}
+	}
+	
+	public void insertAuditTrail(int id, String msg) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+			st = conn.prepareStatement(
+					"insert into Author_Audit_Trail (author_id, entry_msg) values (?, ?)",
+					Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, id);
+			st.setString(2, msg);
+			st.executeUpdate();
+			rs = st.getGeneratedKeys();
+		} catch (SQLException e) {
+			logger.error("The insert has failed");
+			e.printStackTrace();
+		} finally {
+			if (rs != null) {
+				rs.close();
+			}
+			if (st != null) {
+				st.close();
+			}
+		}
+	}
+	
+	public List<String> fetchAuditTrail(Author author) {
+		List<String> auditTrail = new ArrayList<String>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+			st = conn.prepareStatement("Select * from Author_Audit_Trail WHERE author_id = '" + author.getId() + "'");
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+				// create an author object from the record
+				String audit = (rs.getInt("id") + " " + rs.getInt("author_id") + " " + rs.getTimestamp("date_added") +
+						" " + rs.getString("entry_msg"));
+				auditTrail.add(audit);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return auditTrail;
 	}
 	
 	public void deleteAuthor(Author authorDeleting){

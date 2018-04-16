@@ -2,16 +2,23 @@ package Controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import Book.AuditTrailController;
 import Book.BookDetailController;
 import Book.BookListController;
 import Model.Author;
+import Model.AuthorAuditTrail;
 import Model.Book;
 import Model.Publisher;
 import javafx.application.Platform;
@@ -41,6 +48,7 @@ public class SingletonController /*implements Initializable*/ {
 	@FXML private MenuItem bookList;
 	@FXML private MenuItem addBook;
 	@FXML private MenuItem quit;
+	@FXML private Button bAuditTrail;
 	@FXML private TextField tFirstName, tLastName, tDoB, tGender, tWebsite;
 	List<Author> authors;
 	List<Book> books;
@@ -103,11 +111,11 @@ public class SingletonController /*implements Initializable*/ {
 		 else if(event.getSource() == bookList) {
 			 logger.info("Book list clicked");
 			 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookListView.fxml"));
-			 books = Launcher.bookGateway.getBooks();
+			 books = Launcher.bookGateway.getBooks(0);
 			 for(Book x : books) {
 				 System.out.println(x);
 			 }
-			 loader.setController(new BookListController(books));
+			 loader.setController(new BookListController(books, 0));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
 		 }
@@ -116,32 +124,32 @@ public class SingletonController /*implements Initializable*/ {
 	@FXML private void handleButtonAction(ActionEvent event) throws Exception {
 		
 		if(event.getSource() == bSave) {
+			Author oldAuthor = new Author(author.getId(), author.getFirstName(), author.getLastName(), author.getDob(), author.getGender(), author.getWebsite());
+			LocalDateTime currentTimestamp = null;
 			try {
-	    		LocalDateTime currentTimestamp = Launcher.authorGateway.getAuthorLastModifiedById(author.getId());
-	    		if(!currentTimestamp.equals(originalTimestamp)) {
-	    			logger.error("Cannot Save! \n Record has changed since this view loaded \n Please refresh your view and try again. :(");
-	    			System.out.println("Original Timestamp = " + originalTimestamp + " \nCurrent Timestamp = " + currentTimestamp);
+	    		currentTimestamp = Launcher.authorGateway.getAuthorLastModifiedById(author.getId());
+	    		if(!currentTimestamp.equals(author.getOrigModified())) {
+	    			logger.error("Cannot Save! \nRecord has changed since this view loaded \nPlease refresh your view and try again. :(");
+	    			System.out.println("Original Timestamp = " + author.getLastModified() + " \nCurrent Timestamp = " + currentTimestamp);
 	    			return;
 	    		}
-	    	
-	    		Launcher.authorGateway.updateAuthor(author);
-	    		originalTimestamp = Launcher.authorGateway.getAuthorLastModifiedById(author.getId());
-	    		System.out.println(originalTimestamp + " " + currentTimestamp);
-
-				logger.error("Changes Saved", "Your changes have been saved", "");
-
 	    	} catch(Exception e) {
 	    		logger.error(e.getMessage());
 	    	}
+			
+			//Launcher.authorGateway.updateAuthor(author);
+			
+			logger.info("Changes Saved");
 			author.setFirstName(tFirstName.getText());
 			author.setLastName(tLastName.getText());
 			author.setDob(tDoB.getText());
 			author.setGender(tGender.getText());
 			author.setWebsite(tWebsite.getText());
+			author.setOrigModified(currentTimestamp);
 			logger.info("Save button pressed");
 			
 			 try {
-				author.Save(author);
+				author.Save(oldAuthor, author);
 			} catch (Exception e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
@@ -152,13 +160,18 @@ public class SingletonController /*implements Initializable*/ {
 			loader.setController(new AuthorListController(authors));
 			Parent view = loader.load();
 			rootNode.setCenter(view);
-		} 
+		} else if(event.getSource() == bAuditTrail) {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Controllers/AuthorAuditTrail.fxml"));
+			 loader.setController(new AuthorAuditTrail(author));
+			 Parent view = loader.load();
+			 Launcher.rootNode.setCenter(view);
+		}
 		
 	}
 	
-	public void initialize() {
+	public void initialize() throws SQLException {
 		// TODO Auto-generated method stub
-		//load field data
+		//load field dataList<Publisher> publishers = new ArrayList<Publisher>();
 		if(this.author != null) {
 			tFirstName.setText(author.getFirstName());
 			tLastName.setText(author.getLastName());

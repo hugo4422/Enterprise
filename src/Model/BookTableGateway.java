@@ -12,6 +12,7 @@ import java.util.List;
 import java.util.Properties;
 
 import Book.*;
+import main.Launcher;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -104,14 +105,46 @@ public class BookTableGateway {
 
 		return auditTrail;
 	}
+	
+	public int getNumBooks() {
+	    ResultSet rs = null;
+	    PreparedStatement st = null;
+	    int pages = 0;
+	    try {
+	      st = conn.prepareStatement("select count(*) from Book");
+	      rs = st.executeQuery();
+	      if (rs.next()) {
+	        int numberOfRows = rs.getInt(1);
+	        pages = numberOfRows / 50;
+	        System.out.println("pages " + pages);
+	      } else {
+	        System.out.println("error: could not get the record counts");
+	      }
+	    } catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+	    return pages;
+	}
 
-	public List<Book> getBooks() {
+	public List<Book> getBooks(int page) {
 		List<Book> books = new ArrayList<Book>();
 		PreparedStatement st = null;
 		ResultSet rs = null;
-
+		int lower = page * 50;
+		int upper = page * 50 + 50;
 		try {
-			st = conn.prepareStatement("Select * from Book");
+			st = conn.prepareStatement("Select * from Book LIMIT ?,?");
+			st.setInt(1, lower);
+			st.setInt(2,  upper);
 			rs = st.executeQuery();
 
 			while (rs.next()) {
@@ -135,6 +168,34 @@ public class BookTableGateway {
 		}
 
 		return books;
+	}
+	
+	public Book getBookById(int id) {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		Book book = null;
+
+		try {
+			st = conn.prepareStatement("Select * from Book where id = '" + id + "'");
+			rs = st.executeQuery();
+				// create an author object from the record
+			book = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"),
+					rs.getInt("year_published"), rs.getInt("publisher_id"), rs.getString("isbn"),
+					rs.getTimestamp("date_added"));
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return book;
 	}
 
 	public void insertBook(Book newBook) throws SQLException {
@@ -221,6 +282,88 @@ public class BookTableGateway {
 		}
 
 		return books;
+	}
+	
+	public List<AuthorBook> getAuthorsForBook(Book book) {
+		List<AuthorBook> authorBooks = new ArrayList<AuthorBook>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+			st = conn.prepareStatement("Select * from author_book where book_id = '" + book.getId() + "'");
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+				// create an author object from the record
+				int id = rs.getInt("author_id");
+				System.out.println("ID = " + id);
+				
+				Author author = Launcher.authorGateway.getAuthorById(id);
+				AuthorBook authorBook = new AuthorBook(author, book, rs.getBigDecimal("royalty"));
+				authorBooks.add(authorBook);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return authorBooks;
+	}
+	
+	public void deleteAuthorFromBook(Author author) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try{
+			st = conn.prepareStatement("delete from author_book where author_id = '" + author.getId() + "'");
+			st.executeUpdate();
+			rs = st.getGeneratedKeys();
+		}catch(SQLException e){
+			logger.error("The delete has failed");
+			e.printStackTrace();
+		}finally{
+			if(rs != null){
+				rs.close();
+			}
+			if(st != null){
+				st.close();
+			}
+		}
+	}
+	
+	public void addAuthorToBook(AuthorBook newAuthor) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		
+		try{
+			st = conn.prepareStatement("insert into author_book (author_id, book_id, royalty) values (?, ?, ?)", Statement.RETURN_GENERATED_KEYS);
+			st.setInt(1, newAuthor.getAuthor().getId());
+			st.setInt(2, newAuthor.getBook().getId());
+			st.setBigDecimal(3, newAuthor.getRoyalty());
+			st.executeUpdate();
+			rs = st.getGeneratedKeys();
+			if(rs != null && rs.next()){
+				newAuthor.setSaved();
+			}
+		}catch(SQLException e){
+			logger.error("The insert has failed");
+			e.printStackTrace();
+		}finally{
+			if(rs != null){
+				rs.close();
+			}
+			if(st != null){
+				st.close();
+			}
+		}
 	}
 
 	public void close() {

@@ -1,8 +1,10 @@
 package Model;
 
-import java.sql.SQLException; 
+import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -36,8 +38,6 @@ public class Book {
 	public void setId(int id) {
 		this.id = id;
 	}
-	
-	
 	
 	public int getId() {
 		return this.id;
@@ -115,6 +115,12 @@ public class Book {
 	
 	public Timestamp getTime() {
 		return this.time;
+	}
+	
+	public List<AuthorBook> getAuthors() {
+		List<AuthorBook> authorBooks = new ArrayList<AuthorBook>();
+		authorBooks = Launcher.bookGateway.getAuthorsForBook(this);
+		return authorBooks;
 	}
 	
 	public void Save(Book oldBook, Book book) throws Exception {

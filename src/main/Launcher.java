@@ -1,7 +1,14 @@
 package main;
 
-import java.net.URL; 
+import java.net.URL;
 import java.sql.SQLException;
+import java.sql.Timestamp;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -11,8 +18,10 @@ import com.mysql.jdbc.PreparedStatement;
 import Controllers.*;
 import Model.Author;
 import Model.AuthorTableGateway;
+import Model.Book;
 import Model.BookTableGateway;
 import Model.PublisherTableGateway;
+import Model.Publisher;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
