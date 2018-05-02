@@ -36,7 +36,7 @@ public class AuditTrailController {
 		auditLabel.setText("Audit Trail for " + this.book.getTitle());
 		auditFetch = Launcher.bookGateway.fetchAuditTrail(book);
 		ObservableList<String> items = auditList.getItems();
-		for(String a : auditFetch){
+		for(String a : auditFetch) {
 			items.add(a);
 		}
 	}

@@ -242,14 +242,22 @@ public class AuthorTableGateway {
 		return auditTrail;
 	}
 	
-	public void deleteAuthor(Author authorDeleting){
+	public void deleteAuthor(Author authorDeleting) throws SQLException {
 		PreparedStatement st = null;
+		ResultSet rs = null;
 		try{
-		st = conn.prepareStatement("delete from Author where id = '" + authorDeleting.getId() + "'");
-		st.executeUpdate();
-		logger.error("The delete button was clicked");
+			st = conn.prepareStatement("delete from Author where id = '" + authorDeleting.getId() + "'");
+			st.executeUpdate();
 		}catch(SQLException e){
+			logger.error("The delete has failed");
 			e.printStackTrace();
+		}finally{
+			if(rs != null){
+				rs.close();
+			}
+			if(st != null){
+				st.close();
+			}
 		}
 	}
 	

@@ -2,6 +2,7 @@ package Controllers;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -72,8 +73,7 @@ public class AuthorListController {
 			 loader.setController(new BookDetailController(new Book(0, null, null, 0, 0, null, null)));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
-		 }
-		 else if(event.getSource() == bookList) {
+		 } else if(event.getSource() == bookList) {
 			 logger.info("Book list clicked");
 			 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookListView.fxml"));
 			 books = Launcher.bookGateway.getBooks(0);
@@ -83,25 +83,21 @@ public class AuthorListController {
 			 loader.setController(new BookListController(books, 0));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
-		 }
-		
-		itemList.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent click){
-				if(click.getClickCount() == 1){
-					//Use ListView's getSelected Item
-					
-					
-					try{
-						if(source == authorDelete){
-							Author selected = itemList.getSelectionModel().getSelectedItem();
-							Launcher.authorGateway.deleteAuthor(selected);
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+		 } else if(event.getSource() == authorDelete) {
+			 if(author != null) {
+				try {
+					Launcher.authorGateway.deleteAuthor(author);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
-			}
-		});
+				authors = Launcher.authorGateway.getAuthors();
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("AuthorList.fxml"));
+				loader.setController(new AuthorListController(authors));
+				Parent view = loader.load();
+				Launcher.rootNode.setCenter(view);
+			 }
+		 }
 		
 	}
 
@@ -114,21 +110,22 @@ public class AuthorListController {
 		itemList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent click){
+				author = itemList.getSelectionModel().getSelectedItem();
 				if(click.getClickCount() == 2){
 					//Use ListView's getSelected Item
-					Author selected = itemList.getSelectionModel().getSelectedItem();
+					author = itemList.getSelectionModel().getSelectedItem();
 					
-					logger.info("double-clicked " + selected);
+					logger.info("double-clicked " + author);
 					
 					try{
 						FXMLLoader loader = new FXMLLoader(getClass().getResource("AuthorDetailView.fxml"));
 						try {
-							selected.setOrigModified(Launcher.authorGateway.getAuthorLastModifiedById(selected.getId()));
+							author.setOrigModified(Launcher.authorGateway.getAuthorLastModifiedById(author.getId()));
 						} catch (GatewayException e) {
 							// TODO Auto-generated catch block
 							e.printStackTrace();
 						}
-						SingletonController.getInstance().setAuthor(selected);
+						SingletonController.getInstance().setAuthor(author);
 						loader.setController(SingletonController.getInstance());
 						Parent view = loader.load();
 						//attach view to application center of border pane

@@ -49,6 +49,7 @@ public class BookDetailController {
 	private List<AuthorBook> authorBooks;
 	private List<Book> books;
 	private Book book;
+	private AuthorBook selected;
 	
 	final static Logger logger = LogManager.getLogger();
 	
@@ -86,33 +87,31 @@ public class BookDetailController {
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
 		} else if(event.getSource() == addAuthor) {
-			 logger.info("Add Author was Pressed");
-			 URL fxmlFile = this.getClass().getResource("/Book/AddAuthorRoyalty.fxml");
-			 FXMLLoader loader = new FXMLLoader(fxmlFile);
-			 //publishers = Launcher.publisherGateway.getPublishers();
-			 loader.setController(new AddAuthorRoyaltyController(book));
-			 Parent view = loader.load();
-			 Launcher.rootNode.setCenter(view);
-		} 
-
-		authorRoyalty.setOnMouseClicked(new EventHandler<MouseEvent>() {
-			public void handle(MouseEvent click){
-				if(click.getClickCount() == 1){
-					//Use ListView's getSelected Item
-					
-					
-					try{
-						if(event.getSource() == delAuthor){
-							AuthorBook selected = authorRoyalty.getSelectionModel().getSelectedItem();
-							Launcher.bookGateway.deleteAuthorFromBook(selected.getAuthor());
-							Launcher.bookGateway.insertAuditTrail(book.getId(), book.getTitle() + " was deleted");
-						}
-					} catch (Exception e) {
-						e.printStackTrace();
-					}
+			logger.info("Add Author was Pressed");
+			URL fxmlFile = this.getClass().getResource("/Book/AddAuthorRoyalty.fxml");
+			FXMLLoader loader = new FXMLLoader(fxmlFile);
+			// publishers = Launcher.publisherGateway.getPublishers();
+			loader.setController(new AddAuthorRoyaltyController(book));
+			Parent view = loader.load();
+			Launcher.rootNode.setCenter(view);
+		}
+		if (event.getSource() == delAuthor) {
+			if (selected != null) {
+				try {
+					Launcher.bookGateway.deleteAuthorFromBook(selected);
+					Launcher.bookGateway.insertAuditTrail(book.getId(), selected.getAuthor().getFirstName() + " "
+							+ selected.getAuthor().getLastName() + " was deleted from " + book.getTitle());
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("BookDetailView.fxml"));
+					loader.setController(new BookDetailController(book));
+					Parent view = loader.load();
+					// attach view to application center of border pane
+					Launcher.rootNode.setCenter(view);
+				} catch (SQLException | IOException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 			}
-		});
+		}
 	}
 
 	public void initialize() {
@@ -131,26 +130,20 @@ public class BookDetailController {
 		authorRoyalty.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent click){
-				if(click.getClickCount() == 2){
-					//Use ListView's getSelected Item
-					AuthorBook selected = authorRoyalty.getSelectionModel().getSelectedItem();
+				if(click.getClickCount() == 2 && selected == authorRoyalty.getSelectionModel().getSelectedItem()) {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("UpdateRoyalty.fxml"));
+					loader.setController(new UpdateRoyaltyController(selected));
+					Parent view = null;
 					try {
-						Launcher.bookGateway.deleteAuthorFromBook(selected.getAuthor());
-					} catch (SQLException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
-					logger.info("double-clicked " + selected);
-					
-					try{
-						FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookDetailView.fxml"));
-						loader.setController(new BookDetailController(book));
-						Parent view = loader.load();
-						//attach view to application center of border pane
-						Launcher.rootNode.setCenter(view);
+						view = loader.load();
 					} catch (IOException e) {
+						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					//attach view to application center of border pane
+					Launcher.rootNode.setCenter(view);
+				} else {
+					selected = authorRoyalty.getSelectionModel().getSelectedItem();
 				}
 			}
 		});

@@ -2,6 +2,7 @@ package Book;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -22,6 +23,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.TextField;
@@ -40,16 +42,22 @@ public class BookListController {
 	@FXML private Button bPrev;
 	@FXML private Button bFirst;
 	@FXML private Button bLast;
+	@FXML private Button bDelete;
+	@FXML private Label bookLabel;
 	private List<Author> authors;
 	private List<Book> books;
-	private int page, numPages;
+	private int page, numPages, numBooks;
+	
+	private Book selected;
 	
 	final static Logger logger = LogManager.getLogger(SingletonController.class);
 	
 	public BookListController(List<Book> books, int page) {
 		this.books = books;
 		this.page = page;
-		this.numPages = Launcher.bookGateway.getNumBooks();
+		this.numBooks = Launcher.bookGateway.getNumBooks();
+		this.numPages = numBooks/50;
+		selected = null;
 	}
 	
 	@FXML
@@ -101,6 +109,20 @@ public class BookListController {
 			 loader.setController(new BookDetailController(new Book(0, null, null, 0, 0, null, null)));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
+		 } else if(event.getSource() == bDelete) {
+			 if(selected != null) {
+				try {
+					Launcher.bookGateway.deleteBook(selected);
+				} catch (SQLException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+				books = Launcher.bookGateway.getBooks(page);
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookListView.fxml"));
+				loader.setController(new BookListController(books, page));
+				Parent view = loader.load();
+				Launcher.rootNode.setCenter(view);
+			 }
 		 }
 	}
 	
@@ -162,10 +184,10 @@ public class BookListController {
 		bookList.setOnMouseClicked(new EventHandler<MouseEvent>() {
 			@Override
 			public void handle(MouseEvent click){
+				selected = bookList.getSelectionModel().getSelectedItem();
 				if(click.getClickCount() == 2){
 					//Use ListView's getSelected Item
-					Book selected = bookList.getSelectionModel().getSelectedItem();
-					
+					selected = bookList.getSelectionModel().getSelectedItem();
 					logger.info("double-clicked " + selected);
 					
 					try{
@@ -180,5 +202,12 @@ public class BookListController {
 				}
 			}
 		});
+		
+		int upperBooks = ((page*50)+50);
+		if(upperBooks > numBooks) {
+			upperBooks = numBooks;
+		}
+		bookLabel.setText("Fetching Records " + (page*50 + 1) + " to " + upperBooks + " out of " + numBooks);
+		
 	}
 }

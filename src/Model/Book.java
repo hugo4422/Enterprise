@@ -56,6 +56,9 @@ public class Book {
 	}
 	
 	public String getSummary() {
+		if(summary.getValue() == null) {
+			return " ";
+		}
 		return summary.getValue();
 	}
 	
@@ -144,13 +147,13 @@ public class Book {
 	}
 	
 	public void compareBook(Book oldBook, Book newBook) throws SQLException {
-		if(!oldBook.getTitle().equals(newBook.getTitle())) {
+		if(newBook.validateTitle() && !oldBook.getTitle().equals(newBook.getTitle())) {
 			Launcher.bookGateway.insertAuditTrail(this.id, "Title changed from " + oldBook.getTitle() + " to " + newBook.getTitle());
 		}
-		if(!oldBook.getIsbn().equals(newBook.getIsbn())) {
+		if(newBook.validateIsbn() && !oldBook.getIsbn().equals(newBook.getIsbn())) {
 			Launcher.bookGateway.insertAuditTrail(this.id, "ISBN changed from " + oldBook.getIsbn() + " to " + newBook.getIsbn());
 		} 
-		if(!oldBook.getSummary().equals(newBook.getSummary())) {
+		if(newBook.validateSummary() && !oldBook.getSummary().equals(newBook.getSummary())) {
 			Launcher.bookGateway.insertAuditTrail(this.id, "Summary changed from " + oldBook.getSummary() + " to " + newBook.getSummary());
 		}
 		if(oldBook.getPublisherId() != newBook.getPublisherId()) {
@@ -162,6 +165,6 @@ public class Book {
 	}
 	
 	public String toString() {
-		return title + " " + summary + " " + yearPublished + " " + publisher + " " + isbn + " " + dateAdded;
+		return title.getValue() + " " + summary.getValue() + " " + yearPublished.getValue() + " " + publisher.getValue().getPublisherName().getValue() + " " + isbn.getValue() + " " + dateAdded.getValue();
 	}
 }

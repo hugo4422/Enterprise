@@ -109,14 +109,12 @@ public class BookTableGateway {
 	public int getNumBooks() {
 	    ResultSet rs = null;
 	    PreparedStatement st = null;
-	    int pages = 0;
+	    int numberOfRows = 0;
 	    try {
 	      st = conn.prepareStatement("select count(*) from Book");
 	      rs = st.executeQuery();
 	      if (rs.next()) {
-	        int numberOfRows = rs.getInt(1);
-	        pages = numberOfRows / 50;
-	        System.out.println("pages " + pages);
+	        numberOfRows = rs.getInt(1);
 	      } else {
 	        System.out.println("error: could not get the record counts");
 	      }
@@ -132,7 +130,7 @@ public class BookTableGateway {
 				e.printStackTrace();
 			}
 		}
-	    return pages;
+	    return numberOfRows;
 	}
 
 	public List<Book> getBooks(int page) {
@@ -228,6 +226,27 @@ public class BookTableGateway {
 			}
 		}
 	}
+	
+	public void updateRoyalty(AuthorBook authorBook) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		Author author = authorBook.getAuthor();
+		Book book = authorBook.getBook();
+		try{
+			st = conn.prepareStatement("Update author_book SET royalty = '" + authorBook.getRoyalty() + "' where author_id = '" + author.getId() + "' AND book_id = '" + book.getId() + "'");
+			st.executeUpdate();
+		}catch(SQLException e){
+			logger.error("The delete has failed");
+			e.printStackTrace();
+		}finally{
+			if(rs != null){
+				rs.close();
+			}
+			if(st != null){
+				st.close();
+			}
+		}
+	}
 
 	public void updateBook(Book updated) {
 		PreparedStatement st = null;
@@ -284,6 +303,25 @@ public class BookTableGateway {
 		return books;
 	}
 	
+	public void deleteBook(Book book) throws SQLException {
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try{
+			st = conn.prepareStatement("delete from Book where id = '" + book.getId() + "'");
+			st.executeUpdate();
+		}catch(SQLException e){
+			logger.error("The delete has failed");
+			e.printStackTrace();
+		}finally{
+			if(rs != null){
+				rs.close();
+			}
+			if(st != null){
+				st.close();
+			}
+		}
+	}
+	
 	public List<AuthorBook> getAuthorsForBook(Book book) {
 		List<AuthorBook> authorBooks = new ArrayList<AuthorBook>();
 		PreparedStatement st = null;
@@ -296,8 +334,6 @@ public class BookTableGateway {
 			while (rs.next()) {
 				// create an author object from the record
 				int id = rs.getInt("author_id");
-				System.out.println("ID = " + id);
-				
 				Author author = Launcher.authorGateway.getAuthorById(id);
 				AuthorBook authorBook = new AuthorBook(author, book, rs.getBigDecimal("royalty"));
 				authorBooks.add(authorBook);
@@ -318,14 +354,14 @@ public class BookTableGateway {
 		return authorBooks;
 	}
 	
-	public void deleteAuthorFromBook(Author author) throws SQLException {
+	public void deleteAuthorFromBook(AuthorBook selected) throws SQLException {
 		PreparedStatement st = null;
 		ResultSet rs = null;
-		
+		Author author = selected.getAuthor();
+		Book book = selected.getBook();
 		try{
-			st = conn.prepareStatement("delete from author_book where author_id = '" + author.getId() + "'");
+			st = conn.prepareStatement("delete from author_book where author_id = '" + author.getId() + "' AND book_id = '" + book.getId() + "'");
 			st.executeUpdate();
-			rs = st.getGeneratedKeys();
 		}catch(SQLException e){
 			logger.error("The delete has failed");
 			e.printStackTrace();
