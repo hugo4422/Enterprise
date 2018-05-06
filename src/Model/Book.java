@@ -32,6 +32,8 @@ public class Book {
 		if(timestamp != null) {
 			this.dateAdded = new SimpleObjectProperty<LocalDate>(timestamp.toLocalDateTime().toLocalDate());
 			this.time = timestamp;
+		} else {
+			this.dateAdded = new SimpleObjectProperty<LocalDate>(LocalDate.now());
 		}
 	}
 	
@@ -86,6 +88,9 @@ public class Book {
 	}
 	
 	public int getPublisherId() {
+		if(publisher.getValue() == null) {
+			return 0;
+		}
 		return publisher.getValue().getId();
 	}
 	
@@ -110,7 +115,7 @@ public class Book {
 	}
 	
 	public boolean validateIsbn() {
-		if(isbn == null) {
+		if(isbn.getValue() == null) {
 			return false;
 		}
 		return (isbn.getValue().length() <= 13);
@@ -136,7 +141,7 @@ public class Book {
 			throw new Exception("Validation failed");
 		if(this.validateYearPublished() == false)
 			throw new Exception("Validation failed");
-		if(id != 0){
+		if(id != -1){
 			compareBook(oldBook, book);
 			Launcher.bookGateway.updateBook(this);
 		}
@@ -165,6 +170,6 @@ public class Book {
 	}
 	
 	public String toString() {
-		return title.getValue() + " " + summary.getValue() + " " + yearPublished.getValue() + " " + publisher.getValue().getPublisherName().getValue() + " " + isbn.getValue() + " " + dateAdded.getValue();
+		return title.getValue() + " " + id + " " + summary.getValue() + " " + yearPublished.getValue() + " " + publisher.getValue().getPublisherName().getValue() + " " + isbn.getValue() + " " + dateAdded.getValue();
 	}
 }

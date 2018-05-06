@@ -14,6 +14,9 @@ import java.util.ResourceBundle;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.msgServer.Authenticator;
+import com.msgServer.RBACPolicyAuth;
+
 import Book.AuditTrailController;
 import Book.BookDetailController;
 import Book.BookListController;
@@ -29,6 +32,8 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
+import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuButton;
@@ -37,11 +42,11 @@ import javafx.scene.control.TextField;
 import javafx.scene.layout.BorderPane;
 import main.Launcher;
 
-public class SingletonController /*implements Initializable*/ {
+public class SingletonController {
 	
 	private static SingletonController controller;
 	private BorderPane rootNode;
-
+	@FXML private MenuItem createReport;
 	@FXML private Button bSave;
 	@FXML private MenuItem authorList;
 	@FXML private MenuItem addAuthor;
@@ -54,6 +59,8 @@ public class SingletonController /*implements Initializable*/ {
 	List<Book> books;
 	List<Publisher> publishers;
 	private Author author;
+	private int sessionId;
+	private Authenticator auth;
 	
 	private LocalDateTime originalTimestamp;
 	
@@ -88,7 +95,7 @@ public class SingletonController /*implements Initializable*/ {
 			FXMLLoader loader = new FXMLLoader(fxmlFile);
 			loader.setController(new AuthorListController(authors));
 			Parent view = loader.load();
-			rootNode.setCenter(view);
+			Launcher.rootNode.setCenter(view);
 		}
 		 
 		 else if(event.getSource() == addAuthor){
@@ -104,7 +111,7 @@ public class SingletonController /*implements Initializable*/ {
 			 URL fxmlFile = this.getClass().getResource("/Book/BookDetailView.fxml");
 			 FXMLLoader loader = new FXMLLoader(fxmlFile);
 			 //publishers = Launcher.publisherGateway.getPublishers();
-			 loader.setController(new BookDetailController(new Book(0, null, null, 0, 0, null, null)));
+			 loader.setController(new BookDetailController(new Book(-1, null, null, 0, 0, null, null)));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
 		 }
@@ -112,18 +119,28 @@ public class SingletonController /*implements Initializable*/ {
 			 logger.info("Book list clicked");
 			 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookListView.fxml"));
 			 books = Launcher.bookGateway.getBooks(0);
-			 for(Book x : books) {
-				 System.out.println(x);
-			 }
 			 loader.setController(new BookListController(books, 0));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
-		 }
+		 } 
+		 else if(event.getSource() == createReport) {
+			 URL fxmlFile = this.getClass().getResource("/Controllers/SelectPubView.fxml");
+			 FXMLLoader loader = new FXMLLoader(fxmlFile);
+			 loader.setController(new CreateReportController());
+			 Parent view = loader.load();
+			 Launcher.rootNode.setCenter(view);
+		}
 	}
 	
 	@FXML private void handleButtonAction(ActionEvent event) throws Exception {
-		
 		if(event.getSource() == bSave) {
+			if(!SingletonController.getInstance().getAuth().hasAccess(SingletonController.getInstance().getSessionId(), RBACPolicyAuth.CAN_ACCESS_CHOICE_1)) {
+				Alert alert = new Alert(AlertType.ERROR);
+				alert.setTitle("Cannot Save");
+				alert.setContentText("Interns Cannot Update Authors");
+				alert.showAndWait();
+				return;
+			}
 			Author oldAuthor = new Author(author.getId(), author.getFirstName(), author.getLastName(), author.getDob(), author.getGender(), author.getWebsite());
 			LocalDateTime currentTimestamp = null;
 			try {
@@ -159,17 +176,22 @@ public class SingletonController /*implements Initializable*/ {
 			FXMLLoader loader = new FXMLLoader(fxmlFile);
 			loader.setController(new AuthorListController(authors));
 			Parent view = loader.load();
-			rootNode.setCenter(view);
+			Launcher.rootNode.setCenter(view);
 		} else if(event.getSource() == bAuditTrail) {
 			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Controllers/AuthorAuditTrail.fxml"));
 			 loader.setController(new AuthorAuditTrail(author));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
 		}
-		
 	}
 	
 	public void initialize() throws SQLException {
+		if(SingletonController.getInstance().getAuth().hasAccess(SingletonController.getInstance().getSessionId(), RBACPolicyAuth.CAN_ACCESS_CHOICE_1)) {
+			addAuthor.setDisable(false);
+		} else {
+			addAuthor.setDisable(true);
+			addBook.setDisable(true);
+		}
 		// TODO Auto-generated method stub
 		//load field dataList<Publisher> publishers = new ArrayList<Publisher>();
 		if(this.author != null) {
@@ -188,5 +210,21 @@ public class SingletonController /*implements Initializable*/ {
 
 	public void setAuthor(Author author) {
 		this.author = author;
+	}
+
+	public int getSessionId() {
+		return sessionId;
+	}
+
+	public void setSessionId(int sessionId) {
+		this.sessionId = sessionId;
+	}
+
+	public Authenticator getAuth() {
+		return auth;
+	}
+
+	public void setAuth(Authenticator auth) {
+		this.auth = auth;
 	}
 }

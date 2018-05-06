@@ -3,15 +3,19 @@ package Controllers;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.msgServer.RBACPolicyAuth;
+
 import Book.BookDetailController;
 import Book.BookListController;
 import Model.Author;
+import Model.AuthorBook;
 import Model.Book;
 import Model.GatewayException;
 import javafx.application.Platform;
@@ -23,11 +27,14 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
+import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.BorderPane;
+import main.Client;
 import main.Launcher;
 
 public class AuthorListController {
@@ -44,6 +51,7 @@ public class AuthorListController {
 	private Author author;
 	private List<Author> authors;
 	private List<Book> books;
+	private Client client;
 	
 	public AuthorListController(List<Author> authors) {
 		// TODO Auto-generated constructor stub
@@ -84,6 +92,21 @@ public class AuthorListController {
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
 		 } else if(event.getSource() == authorDelete) {
+			 List<AuthorBook> authorBooks = null;
+			 authorBooks = Launcher.bookGateway.getAuthorBooks();
+			 for(AuthorBook x : authorBooks) {
+				 System.out.println(x.getAuthor());
+				 System.out.println(author);
+				 if(author.toString().equals(x.getAuthor().toString())) {
+					 System.out.println("Matched: " + x);
+					 Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
+					 alert.setTitle("Error");
+					 alert.setHeaderText("Author has royalty to books. Cannot delete.");
+					 alert.setResizable(false);
+					 alert.showAndWait();
+					 return;
+				 }
+			 }
 			 if(author != null) {
 				try {
 					Launcher.authorGateway.deleteAuthor(author);
@@ -101,7 +124,20 @@ public class AuthorListController {
 		
 	}
 
-	public void initialize(){
+	public void initialize() {
+		if(SingletonController.getInstance().getAuth().hasAccess(SingletonController.getInstance().getSessionId(), RBACPolicyAuth.CAN_ACCESS_CHOICE_2))
+			authorDelete.setDisable(false);
+		else
+			authorDelete.setDisable(true);
+		
+		if(SingletonController.getInstance().getAuth().hasAccess(SingletonController.getInstance().getSessionId(), RBACPolicyAuth.CAN_ACCESS_CHOICE_1)) {
+			addAuthor.setDisable(false);
+			addBook.setDisable(false);
+		} else {
+			addAuthor.setDisable(true);
+			addBook.setDisable(true);
+		}
+			
 		ObservableList<Author> items = itemList.getItems();
 		for(Author a : authors){
 			items.add(a);

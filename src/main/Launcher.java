@@ -35,6 +35,7 @@ import javafx.stage.Stage;
 public class Launcher extends Application {
 	
 	public static BorderPane rootNode;
+	public static Stage primaryStage;
 	public static SingletonController controller;
 	//public static AuthorListController aController
 	public static AuthorTableGateway authorGateway;
@@ -71,8 +72,9 @@ public class Launcher extends Application {
 	@Override
 	public void start(Stage primaryStage) throws Exception {
 		
-		URL fxmlFile = this.getClass().getResource("MainView.fxml");
-		FXMLLoader loader = new FXMLLoader(fxmlFile);
+		MasterController c = new MasterController();
+		FXMLLoader loader = new FXMLLoader(getClass().getResource("MainView.fxml"));
+		loader.setController(c);
 		rootNode = loader.load();
 		//generate a scenegraph from the fxml file
 		//note that the entire view will be laid out in the fxml file
@@ -81,8 +83,9 @@ public class Launcher extends Application {
 		primaryStage.setTitle("Menu");
 		primaryStage.setScene(scene);
 		primaryStage.show();
+		Launcher.primaryStage = primaryStage;
 		
-		controller = SingletonController.getInstance();
+		/*controller = SingletonController.getInstance();
 		controller.setRootNode((BorderPane) rootNode);
 		
 		fxmlFile = this.getClass().getResource("Menu.fxml");
@@ -90,7 +93,7 @@ public class Launcher extends Application {
 		
 		loader.setController(controller);
 		Parent view = loader.load();
-		rootNode.setCenter(view);
+		rootNode.setCenter(view);*/
 		//build a scene with the scenegraph as its root node
 	}
 }

@@ -168,6 +168,67 @@ public class BookTableGateway {
 		return books;
 	}
 	
+	public List<Book> getBooksByPublisher(int id) {
+		List<Book> books = new ArrayList<Book>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+
+		try {
+			st = conn.prepareStatement("Select * from Book where publisher_id = '" + id + "'");
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+				// create an author object from the record
+				Book book = new Book(rs.getInt("id"), rs.getString("title"), rs.getString("summary"),
+						rs.getInt("year_published"), rs.getInt("publisher_id"), rs.getString("isbn"),
+						rs.getTimestamp("date_added"));
+				books.add(book);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+		
+		return books;
+	}
+	
+	public List<AuthorBook> getAuthorBooks() {
+		List<AuthorBook> authorBooks = new ArrayList<AuthorBook>();
+		PreparedStatement st = null;
+		ResultSet rs = null;
+		try {
+			st = conn.prepareStatement("Select * from author_book");
+			rs = st.executeQuery();
+
+			while (rs.next()) {
+				// create an author object from the record
+				AuthorBook authorBook = new AuthorBook(Launcher.authorGateway.getAuthorById(rs.getInt("author_id")), Launcher.bookGateway.getBookById(rs.getInt("book_id")), rs.getBigDecimal("royalty"));
+				authorBooks.add(authorBook);
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if (rs != null)
+					rs.close();
+				if (st != null)
+					st.close();
+			} catch (SQLException e) {
+				e.printStackTrace();
+			}
+		}
+
+		return authorBooks;
+	}
+	
 	public Book getBookById(int id) {
 		PreparedStatement st = null;
 		ResultSet rs = null;

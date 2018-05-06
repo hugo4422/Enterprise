@@ -9,5 +9,7 @@
 	<classpathentry kind="lib" path="mysql-connector-java-5.1.40-bin.jar"/>
 	<classpathentry kind="lib" path="log4j-api-2.7.jar"/>
 	<classpathentry kind="lib" path="log4j-core-2.7.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Casey Bowden/Desktop/poi-3.17/poi-3.17.jar"/>
+	<classpathentry kind="lib" path="C:/Users/Casey Bowden/Desktop/myEJB.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

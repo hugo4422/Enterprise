@@ -9,6 +9,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.msgServer.RBACPolicyAuth;
+
 import Controllers.SingletonController;
 import Model.Author;
 import Model.AuthorBook;
@@ -41,7 +43,7 @@ public class BookDetailController {
 	@FXML private TextField tfYearPub;
 	@FXML private TextField tfIsbn;
 	@FXML private TextField tfDateAdded;
-	@FXML private Button bAuditTrail;
+	@FXML private Button bAuditTrail, bBack;
 	@FXML private Button addAuthor;
 	@FXML private Button delAuthor;
 
@@ -61,7 +63,9 @@ public class BookDetailController {
 	@FXML
 	private void handleButtonClick(ActionEvent event) throws Exception {
 		if (event.getSource() == bSave) {
-			Book oldBook = new Book(book.getId(), book.getTitle(), book.getSummary(), book.getYearPublished(), book.getPublisherId(), book.getIsbn(), book.getTime());
+			Book oldBook = book;
+			oldBook = new Book(book.getId(), book.getTitle(), book.getSummary(), book.getYearPublished(), book.getPublisherId(), book.getIsbn(), book.getTime());
+			book.setId(book.getId());
 			book.setTitle(new SimpleStringProperty(tfTitle.getText()));
 			book.setYearPublished(new SimpleIntegerProperty(Integer.parseInt(tfYearPub.getText())));
 			book.setSummary(new SimpleStringProperty(taSummary.getText()));
@@ -81,8 +85,14 @@ public class BookDetailController {
 			 loader.setController(new BookListController(books, 0));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
+		} else if(event.getSource() == bBack) {
+			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/BookListView.fxml"));
+			 books = Launcher.bookGateway.getBooks(0);
+			 loader.setController(new BookListController(books, 0));
+			 Parent view = loader.load();
+			 Launcher.rootNode.setCenter(view);
 		} else if(event.getSource() == bAuditTrail) {
-			FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/AuditTrailView.fxml"));
+			 FXMLLoader loader = new FXMLLoader(getClass().getResource("/Book/AuditTrailView.fxml"));
 			 loader.setController(new AuditTrailController(book));
 			 Parent view = loader.load();
 			 Launcher.rootNode.setCenter(view);
@@ -115,6 +125,14 @@ public class BookDetailController {
 	}
 
 	public void initialize() {
+		if(SingletonController.getInstance().getAuth().hasAccess(SingletonController.getInstance().getSessionId(), RBACPolicyAuth.CAN_ACCESS_CHOICE_1)) {
+			bSave.setDisable(false);
+		} else {
+			addAuthor.setDisable(true);
+			delAuthor.setDisable(true);
+			bSave.setDisable(true);
+		}
+		
 		pubList = Launcher.publisherGateway.getPublishers();
 		ObservableList<Publisher> items = cbPubList.getItems();
 		for(Publisher a : pubList){
@@ -148,9 +166,9 @@ public class BookDetailController {
 			}
 		});
 		
-		if(this.book.getId() == 0) {
+		/*if(this.book.getId() == 0) {
 			cbPubList.getSelectionModel().select(0);
-		} else {
+		} else {*/
 			Publisher publisher = Launcher.publisherGateway.getPublisherById(this.book.getPublisherId());
 			if(publisher == null) {
 				cbPubList.getSelectionModel().select(0);
@@ -163,5 +181,4 @@ public class BookDetailController {
 			tfIsbn.setText(book.getIsbn());
 			tfDateAdded.setText(book.getDateAdded());
 		}
-	}
 }

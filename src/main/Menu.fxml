@@ -24,6 +24,11 @@
                         <MenuItem fx:id="addBook" mnemonicParsing="false" onAction="#handleMenuEvent" text="Add Book" />
                   </items>
                 </Menu>
+                  <Menu mnemonicParsing="false" text="Report">
+                     <items>
+                        <MenuItem fx:id="createReport" mnemonicParsing="false" onAction="#handleMenuEvent" text="Create Report" />
+                     </items>
+                  </Menu>
                 <Menu fx:id="quitList" mnemonicParsing="false" onAction="#handleMenuEvent" text="Quit">
                   <items>
                     <MenuItem fx:id="quit" mnemonicParsing="false" onAction="#handleMenuEvent" text="Quit" />

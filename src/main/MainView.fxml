@@ -1,6 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.control.SeparatorMenuItem?>
 <?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Text?>
 
+<BorderPane fx:id="rootPane" prefHeight="300" prefWidth="275" xmlns:fx="http://javafx.com/fxml/1" xmlns="http://javafx.com/javafx/9.0.1">
+    
+    <top>
+<VBox id="vbox" xmlns:fx="http://javafx.com/fxml">
+      
+	<MenuBar fx:id="menuBar">
+		<menus>
+		<Menu text="Forms">
+            <items>
+               <MenuItem fx:id="loginChoice" onAction="#handleMenuAction" text="Login" />
+               <MenuItem fx:id="logoutChoice" onAction="#handleMenuAction" text="Logout" />
+               <SeparatorMenuItem />
+               <MenuItem fx:id="exitChoice" onAction="#handleMenuAction" text="Exit" />
+            </items>
+		</Menu>
+		</menus>
+	</MenuBar>
+</VBox>
+</top>
 
-<BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" />
+<center>
+<GridPane alignment="center" hgap="10" styleClass="root" vgap="10" xmlns:fx="http://javafx.com/fxml">
+<padding><Insets bottom="10" left="25" right="25" top="25" /></padding>
+<!--   <gridLinesVisible>true</gridLinesVisible> -->
+
+	<Text fx:id="textLogin" text="Not logged in" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="0" />
+
+	<Text fx:id="textSessionId" text="No session id" GridPane.columnIndex="0" GridPane.columnSpan="2" GridPane.rowIndex="1" />
+         <columnConstraints>
+            <ColumnConstraints />
+            <ColumnConstraints />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints />
+            <RowConstraints />
+         </rowConstraints>
+      
+</GridPane>
+</center>
+
+</BorderPane>

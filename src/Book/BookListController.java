@@ -10,6 +10,8 @@ import java.util.List;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
+import com.msgServer.RBACPolicyAuth;
+
 import Controllers.AuthorListController;
 import Controllers.SingletonController;
 import Model.Author;
@@ -208,6 +210,16 @@ public class BookListController {
 			upperBooks = numBooks;
 		}
 		bookLabel.setText("Fetching Records " + (page*50 + 1) + " to " + upperBooks + " out of " + numBooks);
-		
+		if(SingletonController.getInstance().getAuth().hasAccess(SingletonController.getInstance().getSessionId(), RBACPolicyAuth.CAN_ACCESS_CHOICE_2))
+			bDelete.setDisable(false);
+		else
+			bDelete.setDisable(true);
+		if(SingletonController.getInstance().getAuth().hasAccess(SingletonController.getInstance().getSessionId(), RBACPolicyAuth.CAN_ACCESS_CHOICE_1))
+			addAuthor.setDisable(false);
+		else
+			addAuthor.setDisable(true);
+			//addBook.setDisable(true);
+			bDelete.setDisable(true);
+			
 	}
 }
